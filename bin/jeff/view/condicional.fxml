@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448" prefWidth="590" styleClass="navbar" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jeff.controller.CondicionalController">
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 20px; -fx-background-color: white;" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="377.0" layoutY="38.0" text="Gráfico: Roupas em Comondicional" />
+            <PieChart fx:id="pie" layoutX="224.0" layoutY="95.0" prefHeight="291.0" prefWidth="361.0" title="Condicionais" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" right="7.0" />
+         </BorderPane.margin>
+      </AnchorPane>
+   </center>
+</BorderPane>

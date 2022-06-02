@@ -1,0 +1,80 @@
+/*Raised button example */
+
+.close:hover {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    /* -fx-border-radius: 50px 50px; */
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(two-pass-box, rgba(128, 128, 128, 0.687), 1.7, 1.7, 1.7, 1.7);
+}
+
+.close:pressed {
+    -fx-translate-x: 1px;
+    -fx-translate-y: 1px;
+    -fx-translate-z: 1px;
+    -fx-effect: dropshadow(two-pass-box, rgba(128, 128, 128, 0.687), 0.7, 0.7, 0.7, 0.7);
+}
+
+.close {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.nav {
+    -fx-background-color: linear-gradient(#939, #612F74);
+    -fx-background-attachment: fixed;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #f0f0f0;
+}
+
+.nav:hover {
+    -fx-background-color: linear-gradient(#8846a2, #939);
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #f0f0f0;
+    -fx-effect: dropshadow(one-pass-box, rgba(128, 128, 128, 0.687), 2, 2, 2, 2);
+    /*<blur-type> = [ gaussian | one-pass-box | three-pass-box | two-pass-box ]*/
+}
+
+.nav:pressed {
+    -fx-translate-x: 1px;
+    -fx-translate-y: 4px;
+    -fx-translate-z: 6px;
+    -fx-effect: dropshadow(one-pass-box, rgba(128, 128, 128, 0.687), 1, 1, 1, 1);
+    -fx-background-color: linear-gradient(#8846a2, #939);
+}
+
+.navbar {
+    -fx-background-color: #612F72;
+}
+
+.button2 {
+    -fx-background-color: white;
+    -fx-font-color: black;
+    -fx-text-decoration: none;
+    -fx-font-size: 16px;
+    -fx-border-color: #008CBA;
+    -fx-border-radius: 14px;
+    -fx-border-style: solid;
+}
+
+.button2:hover {
+    -fx-background-color: #008CBA;
+    -fx-color: white;
+}
+
+.button3 {
+    -fx-background-color: white;
+    -fx-font-color: black;
+    -fx-text-decoration: none;
+    -fx-font-size: 16px;
+    -fx-border-color: #f44336;
+    -fx-border-radius: 14px;
+    -fx-border-style: solid;
+}
+
+.button3:hover {
+    -fx-background-color: #f44336;
+    -fx-color: white;
+}

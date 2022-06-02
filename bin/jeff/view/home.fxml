@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="720.0" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jeff.controller.HomeController">
+   <left>
+      <VBox minWidth="-Infinity" prefHeight="450.0" prefWidth="130.0" styleClass="navbar" BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#actionHome" prefHeight="40.0" prefWidth="120.0" styleClass="nav" text="Home" VBox.vgrow="NEVER">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="10.0" />
+               </VBox.margin>
+               <graphic>
+                  <ImageView fitWidth="24.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/home_FILL0_wght300_GRAD0_opsz40.png" />
+                     </image>
+                     <effect>
+                        <ColorAdjust brightness="1.0" contrast="-1.0" />
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#actionClientes" prefHeight="40.0" prefWidth="120.0" styleClass="nav" text="Clientes" VBox.vgrow="NEVER">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="10.0" />
+               </VBox.margin>
+               <graphic>
+                  <ImageView fitWidth="24.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/outline_people_outline_black_24dp.png" />
+                     </image>
+                     <effect>
+                        <ColorAdjust brightness="1.0" contrast="-1.0" />
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#actionCondicional" prefHeight="40.0" prefWidth="120.0" styleClass="nav" text="Condicional" VBox.vgrow="NEVER">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="10.0" />
+               </VBox.margin>
+               <graphic>
+                  <ImageView fitWidth="24.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/shopping_basket_FILL0_wght300_GRAD0_opsz40.png" />
+                     </image>
+                     <effect>
+                        <ColorAdjust brightness="1.0" contrast="-1.0" />
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#actionRoupa" prefHeight="40.0" prefWidth="120.0" styleClass="nav" text="Roupas" VBox.vgrow="NEVER">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="10.0" />
+               </VBox.margin>
+               <graphic>
+                  <ImageView fitWidth="24.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/checkroom_FILL0_wght300_GRAD0_opsz24.png" />
+                     </image>
+                     <effect>
+                        <ColorAdjust brightness="1.0" contrast="-1.0" />
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#actionRelatorio" prefHeight="40.0" prefWidth="120.0" styleClass="nav" text="Relatório" VBox.vgrow="NEVER">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="10.0" />
+               </VBox.margin>
+               <graphic>
+                  <ImageView fitWidth="24.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/description_FILL0_wght300_GRAD0_opsz40.png" />
+                     </image>
+                     <effect>
+                        <ColorAdjust brightness="1.0" contrast="-1.0" />
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </VBox>
+   </left>
+   <top>
+      <HBox alignment="CENTER_RIGHT" style="-fx-background-color: linear-gradient(#939,  #612F74);">
+         <children>
+            <AnchorPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="681.0" style="-fx-background-color: transparent;">
+               <children>
+                  <Label style="-fx-font-family: &quot;Times New Roman&quot;, Times, serif; -fx-font-size: 26;" text="System COMODATO" AnchorPane.leftAnchor="10.0">
+                     <font>
+                        <Font name="Comic Sans MS Bold Italic" size="23.0" />
+                     </font>
+                     <textFill>
+                        <LinearGradient endX="0.028391191259919735" endY="1.0" startX="0.01577287141456965">
+                           <stops>
+                              <Stop>
+                                 <color>
+                                    <Color />
+                                 </color>
+                              </Stop>
+                              <Stop offset="1.0">
+                                 <color>
+                                    <Color red="1.0" green="1.0" blue="1.0" />
+                                 </color>
+                              </Stop>
+                           </stops>
+                        </LinearGradient>
+                     </textFill>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <Button fx:id="close" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#onClose" styleClass="close">
+               <graphic>
+                  <ImageView fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/power_settings_new_FILL0_wght300_GRAD0_opsz40.png" />
+                     </image>
+                     <effect>
+                        <ColorAdjust brightness="1.0" contrast="-1.0" />
+                     </effect>
+                  </ImageView>
+               </graphic>
+               <HBox.margin>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </Button>
+         </children>
+      </HBox>
+   </top>
+</BorderPane>
