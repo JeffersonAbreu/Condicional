@@ -12,6 +12,11 @@ public class Roupa implements Serializable {
     private int qtd_em_condicional;
 
     public Roupa() {
+        this.id = 0;
+        this.nome = "";
+        this.valor = 0.00;
+        this.qtd = 0;
+        this.qtd_em_condicional = 0;
     }
 
     public Roupa(int id, String nome, double valor, int qtd, int qtd_em_condicional) {

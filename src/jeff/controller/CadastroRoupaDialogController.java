@@ -30,19 +30,24 @@ public class CadastroRoupaDialogController {
     private Label iTitulo;
 
     @FXML
-    private TextField tfID;
-
-    @FXML
     private TextField tfNome;
 
     @FXML
     private TextField tfValor;
+
     @FXML
     private TextField tfQtd;
 
     private Stage stageDialog;
     private Roupa roupa;
     private boolean clicadoOK = false;
+
+    @FXML
+    void initialize() {
+        tfNome = new TextField();
+        tfValor = new TextField();
+        tfQtd = new TextField();
+    }
 
     public Stage getStageDialog() {
         return stageDialog;
@@ -58,10 +63,9 @@ public class CadastroRoupaDialogController {
 
     public void setRoupa(Roupa roupa) {
         this.roupa = roupa;
-        tfID.setText(String.valueOf(roupa.getId()));
         tfNome.setText(roupa.getNome());
         tfValor.setText(String.valueOf(roupa.getValorDouble()));
-
+        tfQtd.setText(String.valueOf(roupa.getQtd()));
     }
 
     public boolean isClicadoOK() {
@@ -70,10 +74,6 @@ public class CadastroRoupaDialogController {
 
     public void setClicadoOK(boolean clicadoOK) {
         this.clicadoOK = clicadoOK;
-    }
-
-    @FXML
-    void initialize() {
     }
 
     @FXML
@@ -93,11 +93,11 @@ public class CadastroRoupaDialogController {
         if (tfNome.getText() == null || tfNome.getText().isEmpty()
                 || tfNome.getText().length() < 3)
             msgErro = "Nome inválido\n";
-        if (tfID.getText() == null || tfID.getText().isEmpty() || tfID.getText().length() < 11)
-            msgErro = msgErro.concat("CPF inválido\n");
+        if (tfQtd.getText() == null || tfQtd.getText().isEmpty() || tfQtd.getText().length() < 11)
+            msgErro = msgErro.concat("Quantidade inválida\n");
         if (tfValor.getText() == null || tfValor.getText().isEmpty()
                 || tfValor.getText().length() > 8)
-            msgErro = msgErro.concat("Telefone inválido\n");
+            msgErro = msgErro.concat("Valor inválida\n");
 
         if (!msgErro.isBlank()) {
             Alert alert = new Alert(AlertType.ERROR, msgErro);
