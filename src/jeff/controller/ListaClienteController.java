@@ -1,6 +1,7 @@
 package jeff.controller;
 
 import java.net.URL;
+import java.sql.Connection;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -8,14 +9,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import jeff.model.dao.ClienteDAO;
+import jeff.model.database.Database;
+import jeff.model.database.DatabaseFactory;
 import jeff.model.domain.Cliente;
 
 public class ListaClienteController {
@@ -33,67 +35,99 @@ public class ListaClienteController {
     private Button btRemove;
 
     @FXML
-    private TableColumn<Cliente, Integer> clIdade;
+    private ImageView foto;
 
     @FXML
-    private TableColumn<Cliente, String> clMatricula;
+    private Label lbBairro;
+
+    @FXML
+    private Label lbCEP;
+
+    @FXML
+    private Label lbCidade;
+
+    @FXML
+    private Label lbEmail;
+
+    @FXML
+    private Label lbLogradouro;
+
+    @FXML
+    private Label lbNome;
+
+    @FXML
+    private Label lbUF;
+
+    @FXML
+    private TableView<Cliente> tbCliente;
+
+    @FXML
+    private TableColumn<Cliente, Integer> clID;
 
     @FXML
     private TableColumn<Cliente, String> clNome;
 
     @FXML
-    private ListView<Cliente> listView;
+    private TableColumn<Cliente, String> clTelefone;
 
     @FXML
-    private TableView<Cliente> tabView;
+    private TableColumn<Cliente, String> clCelular;
+
+    @FXML
+    private TableColumn<Cliente, String> clLimite;
 
     private List<Cliente> listaClientes;
-    private ClienteDAO clienteDAO;
+
     private ObservableList<Cliente> observableListClienteTabView;
-    private ObservableList<Cliente> observableListClienteListView;
 
-    @FXML
-    void actionAdd(ActionEvent event) {
-        Cliente a = tabView.getSelectionModel().getSelectedItem();
-        if(a == null){
-            Alert alert = new Alert(AlertType.ERROR, "Por favor, escolha um Cliente na Tabela.");
-            alert.showAndWait();
-        } else {
-            observableListClienteListView.add(a);
-            observableListClienteTabView.remove(a);
-        }
-    }
+    private ClienteDAO clienteDAO;
 
-    @FXML
-    void actionRemove(ActionEvent event) {
-        Cliente a = listView.getSelectionModel().getSelectedItem();
-        if(a == null){
-            Alert alert = new Alert(AlertType.ERROR, "Por favor, escolha um Cliente na Lista");
-            alert.showAndWait();
-        } else {
-            observableListClienteTabView.add(a);
-            observableListClienteListView.remove(a);
-        }
-    }
+    // DATABASE
+    private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
+    private final Connection connection = database.conectar();
 
     @FXML
     void initialize() {
+        clienteDAO = new ClienteDAO();
+        clienteDAO.setConnection(connection);
+        listaClientes = clienteDAO.listar();
         carregaTabView();
+        clID.setStyle("-fx-alignment: CENTER;");
+        clLimite.setStyle("-fx-alignment: baseline-right;");
+        tbCliente.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldV, newV) -> selectedItemTabViewClient(newV));
+        selectedItemTabViewClient(null);
+    }
+
+    private void selectedItemTabViewClient(Cliente cliente) {
+        if (cliente == null) {
+            lbNome.setText("");
+            lbBairro.setText("");
+            lbCEP.setText("");
+            lbCidade.setText("");
+            lbEmail.setText("");
+            lbLogradouro.setText("");
+            lbUF.setText("");
+        } else {
+            lbNome.setText(cliente.getNome());
+            lbBairro.setText(cliente.getBairro());
+            lbCEP.setText(cliente.getCep());
+            lbCidade.setText(cliente.getCidade());
+            lbEmail.setText(cliente.getEmail());
+            lbLogradouro.setText(cliente.getLogradouro());
+            lbUF.setText(cliente.getUF());
+        }
     }
 
     private void carregaTabView() {
+        clID.setCellValueFactory(new PropertyValueFactory<>("id"));
         clNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        clMatricula.setCellValueFactory(new PropertyValueFactory<>("matricula"));
-        clIdade.setCellValueFactory(new PropertyValueFactory<>("idade"));
+        clTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
+        clCelular.setCellValueFactory(new PropertyValueFactory<>("celular"));
+        clLimite.setCellValueFactory(new PropertyValueFactory<>("limite"));
 
-        clienteDAO = new ClienteDAO();
-        listaClientes = clienteDAO.listar();
-        
         observableListClienteTabView = FXCollections.observableArrayList(listaClientes);
-        observableListClienteListView = FXCollections.observableArrayList();
-        tabView.setItems(observableListClienteTabView);
-        listView.setItems(observableListClienteListView);
-
+        tbCliente.setItems(observableListClienteTabView);
     }
 
 }

@@ -36,7 +36,7 @@ public class VendaDAO {
             stmt.setDate(1, Date.valueOf(venda.getData()));
             stmt.setDouble(2, venda.getValor());
             stmt.setBoolean(3, venda.getPago());
-            stmt.setInt(4, venda.getCliente().getID());
+            stmt.setInt(4, venda.getCliente().getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -52,7 +52,7 @@ public class VendaDAO {
             stmt.setDate(1, Date.valueOf(venda.getData()));
             stmt.setDouble(2, venda.getValor());
             stmt.setBoolean(3, venda.getPago());
-            stmt.setInt(4, venda.getCliente().getID());
+            stmt.setInt(4, venda.getCliente().getId());
             stmt.setInt(5, venda.getCdVenda());
             stmt.execute();
             return true;
@@ -92,7 +92,7 @@ public class VendaDAO {
 
                 venda.setValor(resultado.getDouble("valor"));
                 venda.setPago(resultado.getBoolean("pago"));
-                cliente.setID(resultado.getInt("cdCliente"));
+                cliente.setId(resultado.getInt("cdCliente"));
 
                 // Obtendo os dados completos do Cliente associado à Venda
                 ClienteDAO clienteDAO = new ClienteDAO();
@@ -127,7 +127,7 @@ public class VendaDAO {
                 venda.setData(Util.parseLocalDate(resultado.getString("data")));
                 venda.setValor(resultado.getDouble("valor"));
                 venda.setPago(resultado.getBoolean("pago"));
-                cliente.setID(resultado.getInt("cdCliente"));
+                cliente.setId(resultado.getInt("cdCliente"));
                 venda.setCliente(cliente);
                 retorno = venda;
             }

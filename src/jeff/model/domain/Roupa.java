@@ -2,31 +2,31 @@ package jeff.model.domain;
 
 import java.io.Serializable;
 
-public class Roupa implements Serializable{
+import jeff.util.Util;
+
+public class Roupa implements Serializable {
     private int id;
     private String nome;
     private double valor;
-    private int cod_barras;
     private int qtd;
     private int qtd_em_condicional;
 
     public Roupa() {
     }
 
-    public Roupa(int id, String nome, double valor, int cod_barras, int qtd, int qtd_em_condicional) {
+    public Roupa(int id, String nome, double valor, int qtd, int qtd_em_condicional) {
         this.id = id;
         this.nome = nome;
         this.valor = valor;
-        this.cod_barras = cod_barras;
         this.qtd = qtd;
         this.qtd_em_condicional = qtd_em_condicional;
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 
-    public void setID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -38,20 +38,16 @@ public class Roupa implements Serializable{
         this.nome = nome;
     }
 
-    public double getValor() {
+    public double getValorDouble() {
         return valor;
+    }
+
+    public String getValor() {
+        return Util.toStringDinheiro(valor);
     }
 
     public void setValor(double valor) {
         this.valor = valor;
-    }
-
-    public int getCod_barras() {
-        return cod_barras;
-    }
-
-    public void setCod_barras(int cod_barras) {
-        this.cod_barras = cod_barras;
     }
 
     public int getQtd() {
@@ -72,7 +68,7 @@ public class Roupa implements Serializable{
 
     @Override
     public String toString() {
-        return "Roupa [cod_barras=" + cod_barras + ", id=" + id + ", nome=" + nome + ", qtd=" + qtd
+        return "Roupa [id=" + id + ", nome=" + nome + ", qtd=" + qtd
                 + ", qtd_em_condicional=" + qtd_em_condicional + ", valor=" + valor + "]";
     }
 

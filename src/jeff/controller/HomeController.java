@@ -47,7 +47,7 @@ public class HomeController {
 
     @FXML
     void actionRoupa(MouseEvent event) {
-        loadUI("cadastroRoupa");
+        loadUI("listaRoupa");
     }
 
     @FXML

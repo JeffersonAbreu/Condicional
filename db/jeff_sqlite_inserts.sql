@@ -79,7 +79,6 @@ INSERT INTO
     ROUPA (
         nome,
         valor,
-        cod_barras,
         qtd,
         qtd_em_condicional
     )
@@ -87,70 +86,60 @@ VALUES
     (
         'Jaqueta de Couro - Preta',
         '300,00',
-        1112224,
         3,
         1
     ),
     (
         'Jaqueta Jeans - Azul',
         '199,99',
-        1232121,
         5,
         0
     ),
     (
         'Vestido Longo - Verde',
         '187,50',
-        1524565,
         10,
         0
     ),
     (
         'Vestito Curto - Branco',
         '99,00',
-        987545,
         7,
         0
     ),
     (
         'Vestido Curto - Preto',
         '129,90',
-        6544231,
         3,
         0
     ),
     (
         'Calca Jeans - GG - Azul',
         '99,99',
-        1236550,
         4,
         0
     ),
     (
         'Calca Jeans - G - Azul',
         '99,99',
-        1236549,
         4,
         0
     ),
     (
         'Calca Jeans - M - Azul',
         '99,99',
-        1236548,
         4,
         0
     ),
     (
         'Calca Jeans - P - Azul',
         '99,99',
-        1236551,
         4,
         1
     ),
     (
         'Blusinha de Alca Basica - Branca',
         '59,99',
-        654212,
         3,
         1
     );

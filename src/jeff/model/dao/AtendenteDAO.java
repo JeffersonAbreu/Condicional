@@ -31,7 +31,7 @@ public class AtendenteDAO {
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
                 Atendente atendente = new Atendente();
-                atendente.setID(resultado.getInt("id_atendente"));
+                atendente.setId(resultado.getInt("id_atendente"));
                 atendente.setNome(resultado.getString("nome"));
                 atendente.setLogin(resultado.getString("login"));
                 atendente.setSenha(resultado.getString("senha"));
@@ -48,10 +48,10 @@ public class AtendenteDAO {
         Atendente retorno = new Atendente();
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, atendente.getID());
+            stmt.setInt(1, atendente.getId());
             ResultSet resultado = stmt.executeQuery();
             if (resultado.next()) {
-                atendente.setID(resultado.getInt("id_atendente"));
+                atendente.setId(resultado.getInt("id_atendente"));
                 atendente.setNome(resultado.getString("nome"));
                 atendente.setLogin(resultado.getString("login"));
                 atendente.setSenha(resultado.getString("senha"));

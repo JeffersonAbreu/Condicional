@@ -1,12 +1,11 @@
 package jeff.model.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +41,7 @@ public class ClienteDAO {
             stmt.setString(9, cliente.getCidade());
             stmt.setString(10, cliente.getUF());
             stmt.setString(11, cliente.getCep());
-            stmt.setDouble(12, cliente.getLimite());
+            stmt.setDouble(12, cliente.getLimiteDouble());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -67,8 +66,8 @@ public class ClienteDAO {
             stmt.setString(9, cliente.getCidade());
             stmt.setString(10, cliente.getUF());
             stmt.setString(11, cliente.getCep());
-            stmt.setDouble(12, cliente.getLimite());
-            stmt.setInt(13, cliente.getID());
+            stmt.setDouble(12, cliente.getLimiteDouble());
+            stmt.setInt(13, cliente.getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -81,7 +80,7 @@ public class ClienteDAO {
         String sql = SQLs.DELETE(Cliente.class.getSimpleName().toUpperCase());
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, cliente.getID());
+            stmt.setInt(1, cliente.getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -98,9 +97,9 @@ public class ClienteDAO {
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
                 Cliente cliente = new Cliente();
-                cliente.setID(resultado.getInt("id_cliente"));
+                cliente.setId(resultado.getInt("id_cliente"));
                 cliente.setNome(resultado.getString("nome"));
-                cliente.setData_nascimento(LocalDate.parse(resultado.getString("data_nascimento")));
+                cliente.setData_nascimento(resultado.getDate("data_nascimento").toLocalDate());
                 cliente.setCpf(resultado.getString("cpf"));
                 cliente.setEmail(resultado.getString("email"));
                 cliente.setTelefone(resultado.getString("telefone"));
@@ -124,7 +123,7 @@ public class ClienteDAO {
         Cliente retorno = null;
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, cliente.getID());
+            stmt.setInt(1, cliente.getId());
             ResultSet resultado = stmt.executeQuery();
             if (resultado.next()) {
                 cliente.setNome(resultado.getString("nome"));

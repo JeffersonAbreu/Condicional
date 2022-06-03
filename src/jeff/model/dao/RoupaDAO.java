@@ -29,10 +29,9 @@ public class RoupaDAO {
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, roupa.getNome());
-            stmt.setDouble(2, roupa.getValor());
-            stmt.setInt(3, roupa.getCod_barras());
-            stmt.setInt(4, roupa.getQtd());
-            stmt.setInt(5, roupa.getQtd_em_condicional());
+            stmt.setDouble(2, roupa.getValorDouble());
+            stmt.setInt(3, roupa.getQtd());
+            stmt.setInt(4, roupa.getQtd_em_condicional());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -46,11 +45,10 @@ public class RoupaDAO {
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, roupa.getNome());
-            stmt.setDouble(2, roupa.getValor());
-            stmt.setInt(3, roupa.getCod_barras());
-            stmt.setInt(4, roupa.getQtd());
-            stmt.setInt(5, roupa.getQtd_em_condicional());
-            stmt.setInt(6, roupa.getID());
+            stmt.setDouble(2, roupa.getValorDouble());
+            stmt.setInt(3, roupa.getQtd());
+            stmt.setInt(4, roupa.getQtd_em_condicional());
+            stmt.setInt(5, roupa.getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -63,7 +61,7 @@ public class RoupaDAO {
         String sql = SQLs.DELETE(Roupa.class.getSimpleName().toUpperCase());
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, roupa.getID());
+            stmt.setInt(1, roupa.getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -80,10 +78,9 @@ public class RoupaDAO {
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
                 Roupa roupa = new Roupa();
-                roupa.setID(resultado.getInt("id_roupa"));
+                roupa.setId(resultado.getInt("id_roupa"));
                 roupa.setNome(resultado.getString("nome"));
                 roupa.setValor(resultado.getDouble("valor"));
-                roupa.setCod_barras(resultado.getInt("cod_barras"));
                 roupa.setQtd(resultado.getInt("qtd"));
                 roupa.setQtd_em_condicional(resultado.getInt("qtd_em_condicional"));
                 roupas.add(roupa);
@@ -99,13 +96,12 @@ public class RoupaDAO {
         Roupa retorno = new Roupa();
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, roupa.getID());
+            stmt.setInt(1, roupa.getId());
             ResultSet resultado = stmt.executeQuery();
             if (resultado.next()) {
-                retorno.setID(resultado.getInt("id_roupa"));
+                retorno.setId(resultado.getInt("id_roupa"));
                 retorno.setNome(resultado.getString("nome"));
                 retorno.setValor(resultado.getDouble("valor"));
-                retorno.setCod_barras(resultado.getInt("cod_barras"));
                 retorno.setQtd(resultado.getInt("qtd"));
                 retorno.setQtd_em_condicional(resultado.getInt("qtd_em_condicional"));
             }

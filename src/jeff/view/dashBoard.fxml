@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -9,8 +8,7 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 20px; -fx-background-color: white;" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="377.0" layoutY="38.0" text="Gráfico: Roupas em Comondicional" />
-            <PieChart fx:id="pie" layoutX="224.0" layoutY="95.0" prefHeight="291.0" prefWidth="361.0" title="Condicionais" />
+            <Label layoutX="198.0" layoutY="168.0" text="Gráfico: Roupas em Condicional" />
          </children>
          <BorderPane.margin>
             <Insets bottom="5.0" right="7.0" />

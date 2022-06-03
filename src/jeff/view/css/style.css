@@ -78,3 +78,8 @@
     -fx-background-color: #f44336;
     -fx-color: white;
 }
+
+.teste:hover {
+    -fx-background-color: blue;
+    -fx-font-color: white;
+}

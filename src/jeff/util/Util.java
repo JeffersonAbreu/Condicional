@@ -26,7 +26,7 @@ public class Util {
         return String.valueOf(dinheiro.format(valor));
     }
 
-    public static double toDoubleNumber(String valor) {
+    public static double converterStringParaDouble(String valor) {
         numberFormat.setParseIntegerOnly(false);
         numberFormat.setMaximumFractionDigits(2);
         double number = 0.0;

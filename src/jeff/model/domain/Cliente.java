@@ -3,6 +3,8 @@ package jeff.model.domain;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import jeff.util.Util;
+
 public class Cliente implements Serializable {
 
     private int id;
@@ -39,11 +41,11 @@ public class Cliente implements Serializable {
         this.limite = limite;
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 
-    public void setID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -135,8 +137,12 @@ public class Cliente implements Serializable {
         this.cep = cep;
     }
 
-    public double getLimite() {
+    public double getLimiteDouble() {
         return limite;
+    }
+
+    public String getLimite() {
+        return Util.toStringDinheiro(limite);
     }
 
     public void setLimite(double limite) {

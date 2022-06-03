@@ -34,8 +34,8 @@ public class CondicionalDAO {
         String sql = SQLs.INSERT(Condicional.class.getSimpleName().toUpperCase());
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, condicional.getCliente().getID());
-            stmt.setInt(2, condicional.getAtendente().getID());
+            stmt.setInt(1, condicional.getCliente().getId());
+            stmt.setInt(2, condicional.getAtendente().getId());
             stmt.setDate(3, Date.valueOf(condicional.getData()));
             stmt.setDouble(4, condicional.getValor());
             stmt.setInt(5, condicional.getQtd());
@@ -52,13 +52,13 @@ public class CondicionalDAO {
         String sql = SQLs.UPDATE(Condicional.class.getSimpleName().toUpperCase());
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, condicional.getCliente().getID());
-            stmt.setInt(2, condicional.getAtendente().getID());
+            stmt.setInt(1, condicional.getCliente().getId());
+            stmt.setInt(2, condicional.getAtendente().getId());
             stmt.setDate(3, Date.valueOf(condicional.getData()));
             stmt.setDouble(4, condicional.getValor());
             stmt.setInt(5, condicional.getQtd());
             stmt.setBoolean(6, condicional.isAtivo());
-            stmt.setInt(7, condicional.getID());
+            stmt.setInt(7, condicional.getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -71,7 +71,7 @@ public class CondicionalDAO {
         String sql = SQLs.DELETE(Condicional.class.getSimpleName().toUpperCase());
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, condicional.getID());
+            stmt.setInt(1, condicional.getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -92,9 +92,9 @@ public class CondicionalDAO {
                 Cliente cliente = new Cliente();
                 List<ItensCondicional> itensCondicional = new ArrayList<>();
 
-                condicional.setID(resultado.getInt("id_condicional"));
-                cliente.setID(resultado.getInt("id_cliente"));
-                atendente.setID(resultado.getInt("id_atendente"));
+                condicional.setId(resultado.getInt("id_condicional"));
+                cliente.setId(resultado.getInt("id_cliente"));
+                atendente.setId(resultado.getInt("id_atendente"));
                 condicional.setData(resultado.getDate("data_hora").toLocalDate());
                 condicional.setValor(resultado.getDouble("valor"));
                 condicional.setQtd(resultado.getInt("qtd"));
@@ -131,16 +131,16 @@ public class CondicionalDAO {
         Condicional retorno = new Condicional();
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, condicional.getID());
+            stmt.setInt(1, condicional.getId());
             ResultSet resultado = stmt.executeQuery();
             if (resultado.next()) {
                 Atendente atendente = new Atendente();
                 Cliente cliente = new Cliente();
                 List<ItensCondicional> itensCondicional = new ArrayList<>();
 
-                condicional.setID(resultado.getInt("id_condicional"));
-                cliente.setID(resultado.getInt("id_cliente"));
-                atendente.setID(resultado.getInt("id_atendente"));
+                condicional.setId(resultado.getInt("id_condicional"));
+                cliente.setId(resultado.getInt("id_cliente"));
+                atendente.setId(resultado.getInt("id_atendente"));
                 condicional.setData(resultado.getDate("data_hora").toLocalDate());
                 condicional.setValor(resultado.getDouble("valor"));
                 condicional.setQtd(resultado.getInt("qtd"));
@@ -174,7 +174,7 @@ public class CondicionalDAO {
             ResultSet resultado = stmt.executeQuery();
 
             if (resultado.next()) {
-                retorno.setID(resultado.getInt("max"));
+                retorno.setId(resultado.getInt("max"));
                 return retorno;
             }
         } catch (SQLException ex) {

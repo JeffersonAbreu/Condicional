@@ -13,7 +13,7 @@ public class DatabaseSQLite implements Database {
     public Connection conectar() {
         try {
             Class.forName("org.sqlite.JDBC");
-            this.connection = DriverManager.getConnection("jdbc:sqlite:db/db_comodato.db");
+            this.connection = DriverManager.getConnection("jdbc:sqlite:db/comodato.sqlite3");
             return this.connection;
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(DatabasePostgreSQL.class.getName()).log(Level.SEVERE, null, ex);

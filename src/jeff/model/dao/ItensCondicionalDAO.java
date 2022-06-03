@@ -30,8 +30,8 @@ public class ItensCondicionalDAO {
         String sql = SQLs.INSERT(ItensCondicional.class.getSimpleName().toUpperCase());
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, itensCondicional.getCondicional().getID());
-            stmt.setInt(2, itensCondicional.getRoupa().getID());
+            stmt.setInt(1, itensCondicional.getCondicional().getId());
+            stmt.setInt(2, itensCondicional.getRoupa().getId());
             stmt.setDouble(3, itensCondicional.getValorUni());
             stmt.setInt(4, itensCondicional.getQtd());
             stmt.setDouble(5, itensCondicional.getValorTotal());
@@ -51,8 +51,8 @@ public class ItensCondicionalDAO {
             stmt.setDouble(1, itensCondicional.getValorUni());
             stmt.setInt(2, itensCondicional.getQtd());
             stmt.setDouble(3, itensCondicional.getValorTotal());
-            stmt.setInt(5, itensCondicional.getCondicional().getID());
-            stmt.setInt(6, itensCondicional.getRoupa().getID());
+            stmt.setInt(5, itensCondicional.getCondicional().getId());
+            stmt.setInt(6, itensCondicional.getRoupa().getId());
 
             stmt.execute();
             return true;
@@ -66,8 +66,8 @@ public class ItensCondicionalDAO {
         String sql = SQLs.DELETE(ItensCondicional.class.getSimpleName().toUpperCase());
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, itensCondicional.getCondicional().getID());
-            stmt.setInt(2, itensCondicional.getRoupa().getID());
+            stmt.setInt(1, itensCondicional.getCondicional().getId());
+            stmt.setInt(2, itensCondicional.getRoupa().getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -87,9 +87,9 @@ public class ItensCondicionalDAO {
                 Condicional condicional = new Condicional();
                 Roupa roupa = new Roupa();
 
-                condicional.setID(resultado.getInt("id_condicional"));
+                condicional.setId(resultado.getInt("id_condicional"));
 
-                roupa.setID(resultado.getInt("id_roupa"));
+                roupa.setId(resultado.getInt("id_roupa"));
 
                 itensCondicional.setValorUni(resultado.getDouble("valor_uni"));
                 itensCondicional.setQtd(resultado.getInt("qtd"));
@@ -121,16 +121,16 @@ public class ItensCondicionalDAO {
         List<ItensCondicional> retorno = new ArrayList<>();
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, cond.getID());
+            stmt.setInt(1, cond.getId());
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
                 ItensCondicional itensCondicional = new ItensCondicional();
                 Condicional condicional = new Condicional();
                 Roupa roupa = new Roupa();
 
-                condicional.setID(resultado.getInt("id_condicional"));
+                condicional.setId(resultado.getInt("id_condicional"));
 
-                roupa.setID(resultado.getInt("id_roupa"));
+                roupa.setId(resultado.getInt("id_roupa"));
 
                 itensCondicional.setValorUni(resultado.getDouble("valor_uni"));
                 itensCondicional.setQtd(resultado.getInt("qtd"));
@@ -161,17 +161,17 @@ public class ItensCondicionalDAO {
         ItensCondicional retorno = new ItensCondicional();
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, itensCond.getCondicional().getID());
-            stmt.setInt(2, itensCond.getRoupa().getID());
+            stmt.setInt(1, itensCond.getCondicional().getId());
+            stmt.setInt(2, itensCond.getRoupa().getId());
             ResultSet resultado = stmt.executeQuery();
             if (resultado.next()) {
                 ItensCondicional itensCondicional = new ItensCondicional();
                 Condicional condicional = new Condicional();
                 Roupa roupa = new Roupa();
 
-                condicional.setID(resultado.getInt("id_condicional"));
+                condicional.setId(resultado.getInt("id_condicional"));
 
-                roupa.setID(resultado.getInt("id_roupa"));
+                roupa.setId(resultado.getInt("id_roupa"));
 
                 itensCondicional.setValorUni(resultado.getDouble("valor_uni"));
                 itensCondicional.setQtd(resultado.getInt("qtd"));

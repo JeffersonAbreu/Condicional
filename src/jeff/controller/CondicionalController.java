@@ -26,12 +26,10 @@ import jeff.model.dao.AtendenteDAO;
 import jeff.model.dao.ClienteDAO;
 import jeff.model.dao.CondicionalDAO;
 import jeff.model.dao.ItensCondicionalDAO;
-import jeff.model.dao.ProdutoDAO;
-import jeff.model.dao.RoupaDAO;
 import jeff.model.database.Database;
 import jeff.model.database.DatabaseFactory;
 import jeff.model.domain.Cliente;
-import jeff.model.domain.Roupa;
+import jeff.model.domain.Condicional;
 import jeff.util.Util;
 
 public class CondicionalController {
@@ -50,37 +48,38 @@ public class CondicionalController {
     @FXML
     private Button btRemover;
     @FXML
-    private TableView<Roupa> tbRoupas;
+    private TableView<Condicional> tbCondicional;
     @FXML
-    private TableColumn<Roupa, Cliente> clCliente;
+    private TableColumn<Condicional, Cliente> clCliente;
+    @FXML
+    private TableColumn<Condicional, Cliente> clAtendente;
+    @FXML
+    private TableColumn<Condicional, Integer> clID;
 
     @FXML
-    private TableColumn<Roupa, Integer> clCodigo;
-
-    @FXML
-    private TableColumn<Roupa, LocalDate> clData;
+    private TableColumn<Condicional, LocalDate> clData;
 
     @FXML
     private Label lbCliente;
 
     @FXML
-    private Label lbCodigo;
+    private Label lbID;
 
     @FXML
     private Label lbData;
 
     @FXML
-    private Label lbPago;
+    private Label lbAtivo;
 
     @FXML
     private Label lbValor;
 
-    private List<Roupa> listRoupas;
-    private ObservableList<Roupa> observableListRoupas;
+    private List<Condicional> listCondicional;
+    private ObservableList<Condicional> observableListCondicional;
 
     private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
     private final Connection connection = database.conectar();
-    private final RoupaDAO roupaDAO = new RoupaDAO();
+    private final CondicionalDAO CondicionalDAO = new CondicionalDAO();
     private final ItensCondicionalDAO itensCondicionalDAO = new ItensCondicionalDAO();
     private final CondicionalDAO condicionalDAO = new CondicionalDAO();
     private final ClienteDAO clienteDAO = new ClienteDAO();
@@ -88,22 +87,22 @@ public class CondicionalController {
 
     @FXML
     void actionAdd(ActionEvent event) throws IOException {
-        Roupa roupa = new Roupa();
-        boolean fezARoupa = showRoupaDialog(roupa);
-        if(fezARoupa){
-            roupaDAO.inserir(roupa);
-            carregarTabelaViewRoupas();
+        Condicional Condicional = new Condicional();
+        boolean fezACondicional = showCondicionalDialog(Condicional);
+        if(fezACondicional){
+            CondicionalDAO.inserir(Condicional);
+            carregarTabelaViewCondicionals();
         }
     }
 
-    private boolean showRoupaDialog(Roupa roupa) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("view/ProcessosRoupasDialog.fxml"));
+    private boolean showCondicionalDialog(Condicional condicional) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("view/ProcessosCondicionalsDialog.fxml"));
         AnchorPane pane = (AnchorPane) fxmlLoader.load();
         Stage dialogStage = new Stage();
-        dialogStage.setTitle("Processo Roupas Dialog");
+        dialogStage.setTitle("Processo Condicionals Dialog");
         Scene scene = new Scene(pane);
         dialogStage.setScene(scene);
-        // ProcessosRoupasDialogController controller = fxmlLoader.getController();
+        // ProcessosCondicionalsDialogController controller = fxmlLoader.getController();
         // controller.setDialogStage(dialogStage);
         return false;
     }
@@ -115,8 +114,8 @@ public class CondicionalController {
 
     @FXML
     void actionRemove(ActionEvent event) {
-        Roupa roupa = tbRoupas.getSelectionModel().getSelectedItem();
-        if (roupa != null){
+        Condicional condicional = tbCondicional.getSelectionModel().getSelectedItem();
+        if (condicional != null){
 
         } else {
             Alert alert =  new Alert(Alert.AlertType.ERROR);
@@ -126,37 +125,37 @@ public class CondicionalController {
 
     @FXML
     void initialize() {
-        roupaDAO.setConnection(connection);
-        carregarTabelaViewRoupas();
+        CondicionalDAO.setConnection(connection);
+        carregarTabelaViewCondicionals();
 
-        tbRoupas.getSelectionModel().selectedItemProperty().addListener(
+        tbCondicional.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> selecionarItemTab(newValue));
     }
 
-    private void selecionarItemTab(Roupa roupa) {
-        if (roupa == null) {
-            lbCodigo.setText("");
+    private void selecionarItemTab(Condicional condicional) {
+        if (condicional == null) {
+            lbID.setText("");
             lbData.setText("");
-            lbPago.setText("");
+            lbAtivo.setText("");
             lbValor.setText("");
             lbCliente.setText("");
         } else {
-            lbCodigo.setText(String.valueOf(roupa.getCdRoupa()));
-            lbData.setText(Util.parseString(roupa.getData()));
-            lbPago.setText(!roupa.getPago() ? "Não" : "Sim");
-            lbValor.setText(Util.toStringDinheiro(roupa.getValor()));
-            lbCliente.setText(roupa.getCliente().getNome());
+            lbID.setText(String.valueOf(condicional.getId()));
+            lbData.setText(Util.parseString(condicional.getData()));
+            lbAtivo.setText(!condicional.isAtivo() ? "Não" : "Sim");
+            lbValor.setText(Util.toStringDinheiro(condicional.getValor()));
+            lbCliente.setText(condicional.getCliente().getNome());
         }
     }
 
-    private void carregarTabelaViewRoupas() {
-        clCodigo.setCellValueFactory(new PropertyValueFactory<>("cdRoupa"));
+    private void carregarTabelaViewCondicionals() {
+        clID.setCellValueFactory(new PropertyValueFactory<>("id"));
         clData.setCellValueFactory(new PropertyValueFactory<>("data"));
         clCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
 
-        listRoupas = roupaDAO.listar();
+        listCondicional = CondicionalDAO.listar();
 
-        observableListRoupas = FXCollections.observableArrayList(listRoupas);
-        tbRoupas.setItems(observableListRoupas);
+        observableListCondicional = FXCollections.observableArrayList(listCondicional);
+        tbCondicional.setItems(observableListCondicional);
     }
 }

@@ -38,7 +38,6 @@ CREATE TABLE ROUPA (
                                NOT NULL,
     nome               VARCHAR NOT NULL,
     valor              FLOAT   NOT NULL,
-    cod_barras         INTEGER,
     qtd                INTEGER NOT NULL,
     qtd_em_condicional INTEGER
 );

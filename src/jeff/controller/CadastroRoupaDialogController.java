@@ -9,9 +9,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import jeff.model.domain.Cliente;
+import jeff.model.domain.Roupa;
+import jeff.util.Util;
 
-public class CadastroClienteDialogController {
+public class CadastroRoupaDialogController {
 
     @FXML
     private ResourceBundle resources;
@@ -29,16 +30,18 @@ public class CadastroClienteDialogController {
     private Label iTitulo;
 
     @FXML
-    private TextField tfClienteCPF;
+    private TextField tfID;
 
     @FXML
-    private TextField tfClienteNome;
+    private TextField tfNome;
 
     @FXML
-    private TextField tfClienteTelefone;
+    private TextField tfValor;
+    @FXML
+    private TextField tfQtd;
 
     private Stage stageDialog;
-    private Cliente cliente;
+    private Roupa roupa;
     private boolean clicadoOK = false;
 
     public Stage getStageDialog() {
@@ -49,15 +52,16 @@ public class CadastroClienteDialogController {
         this.stageDialog = stageDialog;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Roupa getRoupa() {
+        return roupa;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-        tfClienteNome.setText(cliente.getNome());
-        tfClienteCPF.setText(cliente.getCpf());
-        tfClienteTelefone.setText(cliente.getTelefone());
+    public void setRoupa(Roupa roupa) {
+        this.roupa = roupa;
+        tfID.setText(String.valueOf(roupa.getId()));
+        tfNome.setText(roupa.getNome());
+        tfValor.setText(String.valueOf(roupa.getValorDouble()));
+
     }
 
     public boolean isClicadoOK() {
@@ -74,11 +78,11 @@ public class CadastroClienteDialogController {
 
     @FXML
     public void acaoClickedButtonOK() {
-        cliente.setNome(tfClienteNome.getText());
-        cliente.setCpf(tfClienteCPF.getText());
-        cliente.setTelefone(tfClienteTelefone.getText());
-
         if (validation()) {
+            roupa.setNome(tfNome.getText());
+            roupa.setValor(Util.converterStringParaDouble(tfValor.getText()));
+            roupa.setQtd(Integer.parseInt(tfQtd.getText()));
+
             clicadoOK = true;
             stageDialog.close();
         }
@@ -86,13 +90,13 @@ public class CadastroClienteDialogController {
 
     private boolean validation() {
         String msgErro = "";
-        if (tfClienteNome.getText() == null || tfClienteNome.getText().isEmpty()
-                || tfClienteNome.getText().length() < 3)
+        if (tfNome.getText() == null || tfNome.getText().isEmpty()
+                || tfNome.getText().length() < 3)
             msgErro = "Nome inválido\n";
-        if (tfClienteCPF.getText() == null || tfClienteCPF.getText().isEmpty() || tfClienteCPF.getText().length() < 11)
+        if (tfID.getText() == null || tfID.getText().isEmpty() || tfID.getText().length() < 11)
             msgErro = msgErro.concat("CPF inválido\n");
-        if (tfClienteTelefone.getText() == null || tfClienteTelefone.getText().isEmpty()
-                || tfClienteTelefone.getText().length() > 8)
+        if (tfValor.getText() == null || tfValor.getText().isEmpty()
+                || tfValor.getText().length() > 8)
             msgErro = msgErro.concat("Telefone inválido\n");
 
         if (!msgErro.isBlank()) {
