@@ -49,37 +49,76 @@
     -fx-background-color: #612F72;
 }
 
-.button2 {
+.buttonOK {
     -fx-background-color: white;
     -fx-font-color: black;
     -fx-text-decoration: none;
-    -fx-font-size: 16px;
+    -fx-font-size: 14px;
     -fx-border-color: #008CBA;
     -fx-border-radius: 14px;
     -fx-border-style: solid;
 }
 
-.button2:hover {
+.buttonOK:hover {
     -fx-background-color: #008CBA;
     -fx-color: white;
+    -fx-border-radius: 14px;
 }
 
-.button3 {
+.buttonCancel {
     -fx-background-color: white;
     -fx-font-color: black;
     -fx-text-decoration: none;
-    -fx-font-size: 16px;
+    -fx-font-size: 14px;
     -fx-border-color: #f44336;
     -fx-border-radius: 14px;
     -fx-border-style: solid;
 }
 
-.button3:hover {
+.buttonCancel:hover {
     -fx-background-color: #f44336;
     -fx-color: white;
+    -fx-border-radius: 14px;
 }
 
 .teste:hover {
     -fx-background-color: blue;
     -fx-font-color: white;
+}
+
+#slide {
+    -fx-background-color: #fff;
+    -fx-border-color: #612F74;
+    -fx-border-radius: 12px;
+    -fx-border-style: solid;
+    -fx-background-radius: 12px;
+    -fx-border-width: 1px;
+}
+
+#slide AnchorPane {
+    -fx-background-color: linear-gradient(#939, #612F74);
+    -fx-background-attachment: fixed;
+    -fx-border-radius: 10px 10px 0px 0px;
+    -fx-background-radius: 10px 10px 0px 0px;
+    -fx-text-fill: #f0f0f0;
+}
+
+#slide TextField {
+    -fx-border-color: #612F74;
+    -fx-border-radius: 10px;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-background-radius: 10px;
+}
+
+#slide TextField:focus {
+    -fx-border-color: #01b549;
+    -fx-border-radius: 10px;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-background-radius: 10px;
+}
+
+#slide .title {
+    -fx-text-fill: #f0f0f0;
 }

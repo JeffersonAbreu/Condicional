@@ -1,14 +1,16 @@
 package jeff.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -17,15 +19,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import jeff.Home;
 import jeff.model.dao.RoupaDAO;
 import jeff.model.database.Database;
 import jeff.model.database.DatabaseFactory;
 import jeff.model.domain.Roupa;
 import jeff.util.Util;
 
-public class ListaRoupaController {
+public class ListaRoupaControllerCopy {
     @FXML
     private ResourceBundle resources;
 
@@ -40,6 +43,15 @@ public class ListaRoupaController {
 
     @FXML
     private Label iTitulo;
+
+    @FXML
+    private TextField tfNome;
+
+    @FXML
+    private TextField tfValor;
+
+    @FXML
+    private TextField tfQtd;
 
     @FXML
     private Button buttonAlterar;
@@ -67,27 +79,15 @@ public class ListaRoupaController {
 
     @FXML
     private TableColumn<Roupa, String> clQtd_em_condicional;
-    @FXML
-    private VBox slide;
-    @FXML
-    private VBox root;
-    @FXML
-    private TextField nome;
-    @FXML
-    private TextField qtd;
-    @FXML
-    private TextField valor;
 
     private List<Roupa> listRoupas;
     private ObservableList<Roupa> observableListRoupas;
-    private String msgErro = "";
+
     // DATABASE
     private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
     private final Connection connection = database.conectar();
     private final RoupaDAO roupaDAO = new RoupaDAO();
     private Roupa roupa;
-    private TranslateTransition transition;
-    private boolean ative = false;
 
     @FXML
     public void initialize() {
@@ -97,12 +97,9 @@ public class ListaRoupaController {
         clQtd.setStyle("-fx-alignment: CENTER;");
         clQtd_em_condicional.setStyle("-fx-alignment: CENTER;");
         clValor.setStyle("-fx-alignment: baseline-right;");
-
-        tbRoupa.setOnMouseClicked(event -> {
-            roupa = tbRoupa.getSelectionModel().getSelectedItem();
-            buttonAlterar.setDisable(false);
-            buttonRemover.setDisable(false);    
-        });
+        tfNome = new TextField();
+        tfValor = new TextField();
+        tfQtd = new TextField();
     }
 
     private void carregarTableViewCliente() {
@@ -120,86 +117,91 @@ public class ListaRoupaController {
 
     @FXML
     private void buttonInserir() {
-        roupaDialog(null);
+        Roupa roupa = new Roupa();
+        boolean clickedOK = roupaDialog(roupa);
+        if (clickedOK) {
+            roupaDAO.inserir(roupa);
+            carregarTableViewCliente();
+        }
     }
 
     @FXML
     private void buttonAlterar() {
         Roupa roupa = tbRoupa.getSelectionModel().getSelectedItem();
-        roupaDialog(roupa);
+        if (roupa != null) {
+            boolean clickedOK = roupaDialog(roupa);
+            if (clickedOK) {
+                roupaDAO.alterar(roupa);
+                carregarTableViewCliente();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Selecione um roupa na tabela para alterar!");
+            alert.show();
+        }
     }
 
     @FXML
     private void buttonRemover() {
         Roupa roupa = tbRoupa.getSelectionModel().getSelectedItem();
-        roupaDAO.remover(roupa);
-        carregarTableViewCliente();
+        if (roupa != null) {
+            roupaDAO.remover(roupa);
+            carregarTableViewCliente();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Selecione um roupa na tabela para remover!");
+            alert.show();
+        }
     }
 
-    private void roupaDialog(Roupa roupa) {
-        setDados(roupa);
-        showTrasition();
-    }
+    private boolean roupaDialog(Roupa roupa) {
 
-    private void showTrasition() {
-        transition = new TranslateTransition(Duration.seconds(0.5), slide);
-        transition.setToX(ative ? 0 : -root.getWidth() / 2 - slide.getWidth() / 2);
-        transition.setToY(ative ? 0 : +root.getHeight() / 2 - slide.getHeight());
-        transition.setOnFinished(event -> {
-            ative = !ative;
-            root.setDisable(ative);
-        });
-        transition.play();
+        FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("view/cadastroRoupaDialog.fxml"));
+        AnchorPane pane = null;
+        try {
+            pane = (AnchorPane) fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        Stage dialog = new Stage();
+        dialog.setTitle("Cadastro de Roupa");
+        Scene scene = new Scene(pane);
+        dialog.setScene(scene);
+
+        CadastroRoupaDialogController controller = fxmlLoader.getController();
+        controller.setStageDialog(dialog);
+        controller.setRoupa(roupa);
+
+        dialog.showAndWait();
+
+        return controller.isClicadoOK();
     }
 
     @FXML
     public void acaoClickedButtonOK() {
         if (validation()) {
-            boolean novo = roupa == null ? true : false;
-            if (novo) {
-                roupa = new Roupa();
-            }
-            roupa.setNome(nome.getText());
-            roupa.setValor(Util.converterStringParaDouble(valor.getText()));
-            roupa.setQtd(Integer.parseInt(qtd.getText()));
-            if (novo)
-                roupaDAO.inserir(roupa);
-            else
-                roupaDAO.alterar(roupa);
+            roupa.setNome(tfNome.getText());
+            roupa.setValor(Util.converterStringParaDouble(tfValor.getText()));
+            roupa.setQtd(Integer.parseInt(tfQtd.getText()));
 
-            carregarTableViewCliente();
-            showTrasition();
+            // clicadoOK = true;
+            // stageDialog.close();
         }
-    }
-
-    private void addMsgErro(TextField t) {
-        msgErro = msgErro.concat(t.getId() + " inválida\n");
     }
 
     private boolean validation() {
-        msgErro = "";
-        if (nome.getText().length() < 3)
-            addMsgErro(nome);
-        if (qtd.getText().length() < 1) {
-            addMsgErro(qtd);
-        } else {
-            try {
-                if (Integer.parseInt(qtd.getText()) <= 0)
-                    addMsgErro(qtd);
-            } catch (NumberFormatException e) {
-                addMsgErro(qtd);
-            }
-        }
-        if (valor.getText().length() < 1) {
-            addMsgErro(this.valor);
-        } else {
-            try {
-                if (Double.parseDouble(valor.getText()) <= 0)
-                    addMsgErro(this.valor);
-            } catch (NumberFormatException e) {
-                addMsgErro(valor);
-            }
-        }
+        String msgErro = "";
+        if (tfNome.getText() == null || tfNome.getText().isEmpty()
+                || tfNome.getText().length() < 3)
+            msgErro = "Nome inválido\n";
+        if (tfQtd.getText() == null || tfQtd.getText().isEmpty() || tfQtd.getText().length() < 11)
+            msgErro = msgErro.concat("Quantidade inválida\n");
+        if (tfValor.getText() == null || tfValor.getText().isEmpty()
+                || tfValor.getText().length() > 8)
+            msgErro = msgErro.concat("Valor inválida\n");
+
         if (!msgErro.isBlank()) {
             Alert alert = new Alert(AlertType.ERROR, msgErro);
             alert.showAndWait();
@@ -210,21 +212,13 @@ public class ListaRoupaController {
 
     @FXML
     public void acaoClickedBottunCancel() {
-        showTrasition();
+        // stageDialog.close();
     }
 
-    public void setDados(Roupa roupa) {
+    public void setRoupa(Roupa roupa) {
         this.roupa = roupa;
-        if (roupa != null) {
-            nome.setText(roupa.getNome());
-            valor.setText(String.valueOf(roupa.getValorDouble()));
-            qtd.setText(String.valueOf(roupa.getQtd()));
-            iTitulo.setText("Alterar Roupa");
-        } else {
-            nome.setText("");
-            valor.setText("");
-            qtd.setText("");
-            iTitulo.setText("Inserir Roupa");
-        }
+        tfNome.setText(roupa.getNome());
+        tfValor.setText(String.valueOf(roupa.getValorDouble()));
+        tfQtd.setText(String.valueOf(roupa.getQtd()));
     }
 }

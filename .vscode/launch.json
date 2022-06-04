@@ -6,18 +6,18 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Home",
+            "request": "launch",
+            "mainClass": "jeff.Home",
+            "projectName": "Condicional_93d1ac",
+            "vmArgs": "--module-path \"C:\\JAVA_LIBs\\javafx-sdk-18\\lib\" --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics"
+        },
+        {
+            "type": "java",
             "name": "Launch App",
             "request": "launch",
             "mainClass": "App",
             "projectName": "Condicional_4102b2b6"
-        },
-        {
-            "type": "java",
-            "name": "Launch Home",
-            "request": "launch",
-            "mainClass": "jeff.Home",
-            "projectName": "Condicional_4102b2b6",
-            "vmArgs": "--module-path \"C:\\JAVA_LIBs\\javafx-sdk-18\\lib\" --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics"
         },
         {
             "type": "java",
