@@ -14,20 +14,6 @@
         },
         {
             "type": "java",
-            "name": "Launch App",
-            "request": "launch",
-            "mainClass": "App",
-            "projectName": "Condicional_4102b2b6"
-        },
-        {
-            "type": "java",
-            "name": "Launch App",
-            "request": "launch",
-            "mainClass": "App",
-            "projectName": "Comodato_2105b631"
-        },
-        {
-            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"
