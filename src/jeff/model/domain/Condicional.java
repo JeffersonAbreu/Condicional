@@ -2,22 +2,27 @@ package jeff.model.domain;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jeff.util.Util;
 
 public class Condicional implements Serializable {
     private int id;
-    private Cliente cliente;
-    private Atendente atendente;
+    private Cliente cliente = null;
+    private Atendente atendente = null;
     private LocalDate data;
     private double valor;
     private int qtd;
     private boolean ativo;
     // outros
-    private List<ItensCondicional> itensDeCondicional;
+    private List<ItensCondicional> itensDeCondicional = new ArrayList<ItensCondicional>();
 
     public Condicional() {
+        this.setData(LocalDate.now());
+        this.setValor(0.0);
+        this.setQtd(0);
+        this.setAtivo(true);
     }
 
     public Condicional(int id, Cliente cliente, Atendente atendente, LocalDate data, double valor, int qtd,
@@ -58,7 +63,8 @@ public class Condicional implements Serializable {
     public LocalDate getData() {
         return data;
     }
-    public String getDataString(){
+
+    public String getDataString() {
         return Util.parseString(data);
     }
 
@@ -69,6 +75,7 @@ public class Condicional implements Serializable {
     public double getValorDouble() {
         return valor;
     }
+
     public String getValor() {
         return Util.toStringDinheiro(valor);
     }
@@ -93,24 +100,36 @@ public class Condicional implements Serializable {
         this.ativo = ativo;
     }
 
-    public List<ItensCondicional> getItensDeCondicional() {
+    public List<ItensCondicional> getItensCondicional() {
         return itensDeCondicional;
     }
 
     public void setItensCondicional(List<ItensCondicional> itensDeCondicional) {
         this.itensDeCondicional = itensDeCondicional;
     }
+
     public String getNomeCliente() {
         return cliente.getNome();
     }
+
     public String getNomeAtendente() {
         return atendente.getNome();
     }
 
     @Override
     public String toString() {
-        return "Condicional [atendente=" + atendente + ", cliente=" + cliente + ", data=" + data + ", id=" + id
+        return "Condicional [atendente=" + getNomeAtendente() + ", cliente=" + getNomeCliente() + ", data=" + data + ", id=" + id
                 + ", qtd=" + qtd + ", ativo=" + ativo + ", valor=" + valor + "]";
     }
 
+    public void updateItens(List<ItensCondicional> itensNovos) {
+        this.itensDeCondicional = new ArrayList<ItensCondicional>();
+        this.setQtd(0);
+        this.setValor(0.0);
+        itensNovos.forEach(item -> {
+            this.itensDeCondicional.add(item);
+            this.setQtd(this.getQtd() + item.getQtd());
+            this.setValor(this.getValorDouble() + item.getValorTotalDouble());
+        });
+    }
 }

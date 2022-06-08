@@ -157,4 +157,13 @@ public class Cliente implements Serializable {
                 + "]";
     }
 
+    public String getKey() {
+        return getId() + " : " + getNome();
+    }
+
+    public void setKey(String key) {
+        String[] keyArray = key.split(" : ");
+        setId(Integer.parseInt(keyArray[0]));
+        setNome(keyArray[1]);
+    }
 }

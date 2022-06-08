@@ -77,4 +77,17 @@ public class Roupa implements Serializable {
                 + ", qtd_em_condicional=" + qtd_em_condicional + ", valor=" + valor + "]";
     }
 
+    public String getKey() {
+        return getId() + " : " + getNome();
+    }
+
+    public void setKey(String key) {
+        String[] keyArray = key.split(" : ");
+        setId(Integer.parseInt(keyArray[0]));
+        setNome(keyArray[1]);
+    }
+
+    public boolean temEstoqueDisponinel() {
+        return qtd - qtd_em_condicional > 0;
+    }
 }

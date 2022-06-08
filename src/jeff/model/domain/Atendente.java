@@ -2,7 +2,7 @@ package jeff.model.domain;
 
 import java.io.Serializable;
 
-public class Atendente implements Serializable{
+public class Atendente implements Serializable {
     private int id;
     private String nome;
     private String login;
@@ -55,4 +55,13 @@ public class Atendente implements Serializable{
         return "Atendente [id=" + id + ", login=" + login + ", nome=" + nome + ", senha=" + senha + "]";
     }
 
+    public String getKey() {
+        return getId() + " : " + getNome();
+    }
+
+    public void setKey(String key) {
+        String[] keyArray = key.split(" : ");
+        setId(Integer.parseInt(keyArray[0]));
+        setNome(keyArray[1]);
+    }
 }
