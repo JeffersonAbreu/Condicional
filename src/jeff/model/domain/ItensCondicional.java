@@ -2,6 +2,8 @@ package jeff.model.domain;
 
 import java.io.Serializable;
 
+import jeff.util.Util;
+
 public class ItensCondicional implements Serializable {
     private Condicional condicional;
     private Roupa roupa;
@@ -20,6 +22,9 @@ public class ItensCondicional implements Serializable {
         this.valorTotal = valor_total;
     }
 
+    public Integer getId() {
+        return getRoupa().getId();
+    }
     public Roupa getRoupa() {
         return roupa;
     }
@@ -36,8 +41,11 @@ public class ItensCondicional implements Serializable {
         this.condicional = condicional;
     }
 
-    public double getValorUni() {
+    public double getValorUniDouble() {
         return valorUni;
+    }
+    public String getValorUni(){
+        return Util.toStringDinheiro(valorUni);
     }
 
     public void setValorUni(double valor_uni) {
@@ -52,18 +60,24 @@ public class ItensCondicional implements Serializable {
         this.qtd = qtd;
     }
 
-    public double getValorTotal() {
+    public double getValorTotalDouble() {
         return valorTotal;
+    }
+    public String getValorTotal(){
+        return Util.toStringDinheiro(valorTotal);
     }
 
     public void setValorTotal(double valor_total) {
         this.valorTotal = valor_total;
     }
+    public String getNomeRoupa() {
+        return roupa.getNome();
+    }
 
     @Override
     public String toString() {
         return "ItensCondicional [condicional=" + condicional + ", qtd=" + qtd + ", roupa=" + roupa + ", valor_total="
-                + valorTotal + ", valor_uni=" + valorUni + "]";
+                + getValorTotal() + ", valor_uni=" + getValorUni() + "]";
     }
 
 }

@@ -1,29 +1,46 @@
-import java.sql.Connection;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
-import jeff.model.dao.ClienteDAO;
-import jeff.model.dao.CondicionalDAO;
-import jeff.model.database.Database;
-import jeff.model.database.DatabaseFactory;
-import jeff.model.domain.Cliente;
-import jeff.model.domain.Condicional;
-import jeff.util.SQLs;
+public class App extends Application {
 
-public class App {
+    Label caption = new Label("We");
+
+    @Override
+    public void start(Stage stage) {
+        Group root = new Group();
+        Scene scene = new Scene(root, 500, 200);
+        stage.setScene(scene);
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(2);
+        grid.setHgap(5);
+
+        scene.setRoot(grid);
+
+        caption.setFont(Font.font("Verdana", 20));
+
+        GridPane.setConstraints(caption, 0, 0);
+        GridPane.setColumnSpan(caption, 8);
+        grid.getChildren().add(caption);
+
+        final Separator sepHor = new Separator();
+        sepHor.setValignment(VPos.CENTER);
+        GridPane.setConstraints(sepHor, 0, 1);
+        GridPane.setColumnSpan(sepHor, 7);
+        grid.getChildren().add(sepHor);
+
+        stage.show();
+    }
     public static void main(String[] args) {
-        System.console();
-        Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
-        Connection connection = database.conectar();
-        Condicional condicional = new Condicional();
-        SQLs.start();
-        condicional.setId(1);
-        CondicionalDAO condicionalDAO = new CondicionalDAO();
-        ClienteDAO clienteDAO = new ClienteDAO();
-        clienteDAO.setConnection(connection);
-        condicionalDAO.setConnection(connection);
-        // condicionalDAO.inserir(c);
-        // System.out.println(condicionalDAO.buscar(condicional));
-        for (Cliente cliente : clienteDAO.listar()) {
-            System.out.println(cliente);
-        }
+        launch(args);
     }
 }

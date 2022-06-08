@@ -44,7 +44,7 @@
                   </ButtonBar>
                </children>
             </VBox>
-            <VBox fx:id="slide" layoutX="587.3333333333333" layoutY="80.0" AnchorPane.bottomAnchor="190.0" AnchorPane.rightAnchor="-340.0" AnchorPane.topAnchor="80.0">
+            <VBox fx:id="telaDialog" layoutX="587.3333333333333" layoutY="80.0" AnchorPane.bottomAnchor="190.0" AnchorPane.rightAnchor="-340.0" AnchorPane.topAnchor="80.0">
             <children>
                   <AnchorPane prefHeight="31.0">
                      <children>

@@ -86,7 +86,7 @@
     -fx-font-color: white;
 }
 
-#slide {
+#telaDialog {
     -fx-background-color: #fff;
     -fx-border-color: #612F74;
     -fx-border-radius: 12px;
@@ -95,7 +95,7 @@
     -fx-border-width: 1px;
 }
 
-#slide AnchorPane {
+#telaDialog AnchorPane {
     -fx-background-color: linear-gradient(#939, #612F74);
     -fx-background-attachment: fixed;
     -fx-border-radius: 10px 10px 0px 0px;
@@ -103,7 +103,7 @@
     -fx-text-fill: #f0f0f0;
 }
 
-#slide TextField {
+#telaDialog TextField {
     -fx-border-color: #612F74;
     -fx-border-radius: 10px;
     -fx-border-style: solid;
@@ -111,7 +111,7 @@
     -fx-background-radius: 10px;
 }
 
-#slide TextField:focus {
+#telaDialog TextField:focus {
     -fx-border-color: #01b549;
     -fx-border-radius: 10px;
     -fx-border-style: solid;
@@ -119,6 +119,59 @@
     -fx-background-radius: 10px;
 }
 
-#slide .title {
+#telaDialog .title {
     -fx-text-fill: #f0f0f0;
+}
+
+#telaAddItem {
+    -fx-background-color: #fff;
+    -fx-border-color: #612F74;
+    -fx-border-radius: 12px;
+    -fx-border-style: solid;
+    -fx-background-radius: 12px;
+    -fx-border-width: 1px;
+}
+
+#telaAddItem AnchorPane {
+    -fx-background-color: linear-gradient(#939, #612F74);
+    -fx-background-attachment: fixed;
+    -fx-border-radius: 10px 10px 0px 0px;
+    -fx-background-radius: 10px 10px 0px 0px;
+    -fx-text-fill: #f0f0f0;
+}
+
+#telaAddItem TextField {
+    -fx-border-color: #612F74;
+    -fx-border-radius: 10px;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-background-radius: 10px;
+}
+
+#telaAddItem TextField:focus {
+    -fx-border-color: #01b549;
+    -fx-border-radius: 10px;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-background-radius: 10px;
+}
+
+#telaAddItem .title {
+    -fx-text-fill: #f0f0f0;
+}
+
+#telaAddItem Spinner {
+    -fx-border-color: #612F74;
+    -fx-border-radius: 5px;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-background-radius: 5px;
+}
+
+#telaAddItem Spinner:focus {
+    -fx-border-color: #01b549;
+    -fx-border-radius: 5px;
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-background-radius: 5px;
 }

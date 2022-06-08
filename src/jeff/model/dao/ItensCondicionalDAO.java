@@ -32,9 +32,9 @@ public class ItensCondicionalDAO {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, itensCondicional.getCondicional().getId());
             stmt.setInt(2, itensCondicional.getRoupa().getId());
-            stmt.setDouble(3, itensCondicional.getValorUni());
+            stmt.setDouble(3, itensCondicional.getValorUniDouble());
             stmt.setInt(4, itensCondicional.getQtd());
-            stmt.setDouble(5, itensCondicional.getValorTotal());
+            stmt.setDouble(5, itensCondicional.getValorTotalDouble());
 
             stmt.execute();
             return true;
@@ -48,9 +48,9 @@ public class ItensCondicionalDAO {
         String sql = SQLs.UPDATE(ItensCondicional.class.getSimpleName().toUpperCase());
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setDouble(1, itensCondicional.getValorUni());
+            stmt.setDouble(1, itensCondicional.getValorUniDouble());
             stmt.setInt(2, itensCondicional.getQtd());
-            stmt.setDouble(3, itensCondicional.getValorTotal());
+            stmt.setDouble(3, itensCondicional.getValorTotalDouble());
             stmt.setInt(5, itensCondicional.getCondicional().getId());
             stmt.setInt(6, itensCondicional.getRoupa().getId());
 
@@ -116,7 +116,6 @@ public class ItensCondicionalDAO {
     }
 
     public List<ItensCondicional> listarPorCondicional(Condicional cond) {
-        System.out.println(ItensCondicional.class.getSimpleName().toUpperCase());
         String sql = SQLs.SELECT_FK(ItensCondicional.class.getSimpleName().toUpperCase());
         List<ItensCondicional> retorno = new ArrayList<>();
         try {

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import jeff.util.Util;
+
 public class Condicional implements Serializable {
     private int id;
     private Cliente cliente;
@@ -56,13 +58,19 @@ public class Condicional implements Serializable {
     public LocalDate getData() {
         return data;
     }
+    public String getDataString(){
+        return Util.parseString(data);
+    }
 
     public void setData(LocalDate data) {
         this.data = data;
     }
 
-    public double getValor() {
+    public double getValorDouble() {
         return valor;
+    }
+    public String getValor() {
+        return Util.toStringDinheiro(valor);
     }
 
     public void setValor(double valor) {
@@ -91,6 +99,12 @@ public class Condicional implements Serializable {
 
     public void setItensCondicional(List<ItensCondicional> itensDeCondicional) {
         this.itensDeCondicional = itensDeCondicional;
+    }
+    public String getNomeCliente() {
+        return cliente.getNome();
+    }
+    public String getNomeAtendente() {
+        return atendente.getNome();
     }
 
     @Override

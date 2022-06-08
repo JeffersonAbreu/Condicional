@@ -37,7 +37,7 @@ public class CondicionalDAO {
             stmt.setInt(1, condicional.getCliente().getId());
             stmt.setInt(2, condicional.getAtendente().getId());
             stmt.setDate(3, Date.valueOf(condicional.getData()));
-            stmt.setDouble(4, condicional.getValor());
+            stmt.setDouble(4, condicional.getValorDouble());
             stmt.setInt(5, condicional.getQtd());
             stmt.setBoolean(6, condicional.isAtivo());
             stmt.execute();
@@ -55,7 +55,7 @@ public class CondicionalDAO {
             stmt.setInt(1, condicional.getCliente().getId());
             stmt.setInt(2, condicional.getAtendente().getId());
             stmt.setDate(3, Date.valueOf(condicional.getData()));
-            stmt.setDouble(4, condicional.getValor());
+            stmt.setDouble(4, condicional.getValorDouble());
             stmt.setInt(5, condicional.getQtd());
             stmt.setBoolean(6, condicional.isAtivo());
             stmt.setInt(7, condicional.getId());
@@ -78,6 +78,64 @@ public class CondicionalDAO {
             Logger.getLogger(CondicionalDAO.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
+    }
+
+    public List<Condicional> listarPorNomeCliente(String nome) {
+        List<Condicional> retorno = new ArrayList<>();
+        String sql;
+        PreparedStatement stmt;
+        try {
+            sql = SQLs.SELECT_ALL(Condicional.class.getSimpleName().toUpperCase());
+            stmt = connection.prepareStatement(sql);
+            if (nome != null && !nome.isEmpty() && !nome.trim().isEmpty()) {
+                sql = sql.replace(";", " WHERE id_cliente IN (SELECT id_cliente FROM CLIENTE WHERE nome LIKE '");
+                if (nome.startsWith(" ")) {
+                    nome = nome.substring(1);
+                    sql += nome + "%');";
+                } else {
+                    sql += "%" + nome + "%');";
+                }
+                stmt = connection.prepareStatement(sql);
+            }
+            ResultSet resultado = stmt.executeQuery();
+            while (resultado.next()) {
+                Condicional condicional = new Condicional();
+                Atendente atendente = new Atendente();
+                Cliente cliente = new Cliente();
+                List<ItensCondicional> itensCondicional = new ArrayList<>();
+
+                condicional.setId(resultado.getInt("id_condicional"));
+                cliente.setId(resultado.getInt("id_cliente"));
+                atendente.setId(resultado.getInt("id_atendente"));
+                condicional.setData(resultado.getDate("data_hora").toLocalDate());
+                condicional.setValor(resultado.getDouble("valor"));
+                condicional.setQtd(resultado.getInt("qtd"));
+                condicional.setAtivo(resultado.getBoolean("ativo"));
+
+                // Obtendo os dados completos do Cliente associado à Condicional
+                ClienteDAO clienteDAO = new ClienteDAO();
+                clienteDAO.setConnection(connection);
+                cliente = clienteDAO.buscar(cliente);
+
+                // Obtendo Atendente
+                AtendenteDAO atendenteDAO = new AtendenteDAO();
+                atendenteDAO.setConnection(connection);
+                atendente = atendenteDAO.buscar(atendente);
+
+                // Obtendo os dados completos dos Itens de Condicional associados à Condicional
+                ItensCondicionalDAO itensCondicionalDAO = new ItensCondicionalDAO();
+                itensCondicionalDAO.setConnection(connection);
+                itensCondicional = itensCondicionalDAO.listarPorCondicional(condicional);
+
+                condicional.setCliente(cliente);
+                condicional.setAtendente(atendente);
+                condicional.setItensCondicional(itensCondicional);
+                retorno.add(condicional);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CondicionalDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return retorno;
     }
 
     public List<Condicional> listar() {

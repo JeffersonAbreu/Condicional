@@ -68,7 +68,7 @@ public class ListaRoupaController {
     @FXML
     private TableColumn<Roupa, String> clQtd_em_condicional;
     @FXML
-    private VBox slide;
+    private VBox telaDialog;
     @FXML
     private VBox root;
     @FXML
@@ -100,8 +100,10 @@ public class ListaRoupaController {
 
         tbRoupa.setOnMouseClicked(event -> {
             roupa = tbRoupa.getSelectionModel().getSelectedItem();
-            buttonAlterar.setDisable(false);
-            buttonRemover.setDisable(false);    
+            if (roupa != null) {
+                buttonAlterar.setDisable(false);
+                buttonRemover.setDisable(false);
+            }
         });
     }
 
@@ -142,9 +144,9 @@ public class ListaRoupaController {
     }
 
     private void showTrasition() {
-        transition = new TranslateTransition(Duration.seconds(0.5), slide);
-        transition.setToX(ative ? 0 : -root.getWidth() / 2 - slide.getWidth() / 2);
-        transition.setToY(ative ? 0 : +root.getHeight() / 2 - slide.getHeight());
+        transition = new TranslateTransition(Duration.seconds(0.5), telaDialog);
+        transition.setToX(ative ? 0 : -root.getWidth() / 2 - telaDialog.getWidth() / 2);
+        transition.setToY(ative ? 0 : +root.getHeight() / 2 - telaDialog.getHeight());
         transition.setOnFinished(event -> {
             ative = !ative;
             root.setDisable(ative);
