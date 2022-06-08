@@ -9,12 +9,12 @@ import javafx.scene.input.KeyEvent;
 
 public class UtilAutoCompleteComboBox<T> implements EventHandler<KeyEvent> {
 
-    private ComboBox<T> comboBox;
+    private ComboBox comboBox;
     private StringBuilder sb;
-    private ObservableList<T> data;
+    private ObservableList data;
     private boolean moveCaretToPos = false;
     private int caretPos;
-    public static boolean isAutoCompleteInit = false;
+    public static boolean isAutoCompleteInit = true;
 
     public UtilAutoCompleteComboBox(final ComboBox comboBox) {
         this.comboBox = comboBox;

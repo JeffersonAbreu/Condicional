@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -115,8 +116,8 @@
                      <columnConstraints>
                         <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="72.99999237060547" />
                         <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="5.0" minWidth="5.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="560.0" minWidth="10.0" prefWidth="236.66670735677084" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="68.3333740234375" minWidth="0.0" prefWidth="21.333292643229186" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="560.0" minWidth="10.0" prefWidth="247.99995930989584" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="68.3333740234375" minWidth="0.0" prefWidth="10.666707356770814" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="560.0" minWidth="10.0" prefWidth="209.6666259765625" />
                      </columnConstraints>
                      <rowConstraints>
@@ -140,8 +141,7 @@
                               </Label>
                            </children>
                         </HBox>
-                        <TextField fx:id="tfNomeCliente" GridPane.columnIndex="2" />
-                        <TextField fx:id="tfNomeAtendente" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <JFXComboBox fx:id="cbCliente" prefHeight="25.0" prefWidth="250.0" GridPane.columnIndex="2" />
                         <HBox spacing="5.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                            <children>
                               <Button minWidth="100.0" mnemonicParsing="false" onMouseClicked="#actionAddItem" styleClass="nav" text="ADD">
@@ -170,6 +170,7 @@
                               </Button>
                            </children>
                         </HBox>
+                        <JFXComboBox fx:id="cbAtendente" prefWidth="250.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                      </children>
                      <opaqueInsets>
                         <Insets left="10.0" right="10.0" />
@@ -214,7 +215,7 @@
                <children>
                   <AnchorPane prefHeight="31.0" prefWidth="399.0">
                      <children>
-                        <Label fx:id="itemTitulo" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="3.0" prefHeight="20.0" prefWidth="389.0" styleClass="title" text="Inserir" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="3.0" prefHeight="20.0" prefWidth="389.0" styleClass="title" text="Inserir Item" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="System Bold" size="14.0" />
                            </font>
@@ -234,7 +235,6 @@
                      <children>
                         <Label text="Roupa" />
                         <Label text="Valor Unit." GridPane.rowIndex="1" />
-                        <TextField fx:id="tfItemNomeRoupa" prefHeight="28.0" prefWidth="329.0" GridPane.columnIndex="2" />
                         <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="328.0" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <children>
                               <TextField fx:id="tfItemValorUni" alignment="CENTER" maxWidth="80.0" prefHeight="28.0" />
@@ -244,6 +244,7 @@
                               <Label fx:id="lbMaxDisponivel" text="000" />
                            </children>
                         </HBox>
+                        <JFXComboBox fx:id="cbRoupa" prefHeight="25.0" prefWidth="331.0" GridPane.columnIndex="2" />
                      </children>
                      <opaqueInsets>
                         <Insets left="10.0" right="10.0" />

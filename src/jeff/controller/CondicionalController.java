@@ -2,6 +2,7 @@ package jeff.controller;
 
 import java.net.URL;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -23,11 +24,19 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import jeff.model.dao.AtendenteDAO;
+import jeff.model.dao.ClienteDAO;
 import jeff.model.dao.CondicionalDAO;
+import jeff.model.dao.RoupaDAO;
 import jeff.model.database.Database;
 import jeff.model.database.DatabaseFactory;
+import jeff.model.domain.Atendente;
+import jeff.model.domain.Cliente;
 import jeff.model.domain.Condicional;
 import jeff.model.domain.ItensCondicional;
+import jeff.model.domain.Roupa;
+import jeff.util.Util;
+import jeff.util.UtilAutoCompleteComboBox;
 
 public class CondicionalController {
     @FXML
@@ -39,9 +48,11 @@ public class CondicionalController {
     @FXML
     private Button btAlterar, btExcluir, btRemoverItem;
     @FXML
-    private JFXComboBox<String> nomeClienteBox;
+    private JFXComboBox<String> cbCliente;
     @FXML
-    private JFXComboBox<String> nomeAtendenteBox;
+    private JFXComboBox<String> cbAtendente;
+    @FXML
+    private JFXComboBox<String> cbRoupa;
     @FXML
     private TableView<Condicional> tabCondicional;
     @FXML
@@ -63,18 +74,21 @@ public class CondicionalController {
     private TableColumn<ItensCondicional, String> colRoupa1, colTotalItem1, colValUni1;
 
     @FXML
-    private TextField tfPesquisa, tfNomeCliente, tfNomeAtendente;
+    private TextField tfPesquisa;
 
     @FXML
-    private TextField tfItemNomeRoupa, tfItemValorUni;
+    private TextField tfItemValorUni;
     @FXML
     private VBox telaPrincipal, telaDialog, telaAddItem;
     @FXML
     private Spinner<Integer> spinnerQtd;
     @FXML
-    private Label itemTitulo, iTitulo, lbData, lbTotal, lbItemTotal, lbMaxDisponivel, lbNItens;
+    private Label iTitulo, lbData, lbTotal, lbItemTotal, lbMaxDisponivel, lbNItens;
 
     List<Condicional> listaCondicional;
+    List<Cliente> listaCliente;
+    List<Atendente> listaAtendente;
+    List<Roupa> listaRoupa;
     ObservableList<Condicional> obsListaCondicional;
     ObservableList<ItensCondicional> obsListaItens;
     ObservableList<ItensCondicional> obsListaItens1;
@@ -83,6 +97,9 @@ public class CondicionalController {
     private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
     private final Connection connection = database.conectar();
     private final CondicionalDAO condicionalDAO = new CondicionalDAO();
+    private final ClienteDAO clienteDAO = new ClienteDAO();
+    private final AtendenteDAO atendenteDAO = new AtendenteDAO();
+    private final RoupaDAO roupaDAO = new RoupaDAO();
 
     // Transferencia de dados entre telas
     private Condicional condicional;
@@ -93,6 +110,9 @@ public class CondicionalController {
     @FXML
     void initialize() {
         condicionalDAO.setConnection(connection);
+        clienteDAO.setConnection(connection);
+        atendenteDAO.setConnection(connection);
+        roupaDAO.setConnection(connection);
 
         colIDCond.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCliente.setCellValueFactory(new PropertyValueFactory<>("nomeCliente"));
@@ -132,6 +152,41 @@ public class CondicionalController {
             }
         });
         telaPrincipal.setDisable(false);
+
+        actionsTelaAddItem();
+    }
+
+    private void actionsTelaAddItem() {
+        // Implementa o AutoComplete utilizando a classe utilAutoCompleteComboBox
+        // new UtilAutoCompleteComboBox<>(cbRoupa);
+        cbRoupa.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                String key = newValue.toString().split(" : ")[0];
+                if (!key.isEmpty()) {
+                    Roupa roupa = new Roupa();
+                    roupa.setId(Integer.parseInt(key));
+                    roupa = roupaDAO.buscar(roupa);
+                    System.out.println(roupa.getNome());
+                    int max = roupa.getQtd() - roupa.getQtd_em_condicional();
+                    spinnerQtd.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, max, 1));
+                    lbMaxDisponivel.setText(String.valueOf(--max));
+                    tfItemValorUni.setText(String.valueOf(roupa.getValorDouble()));
+                    lbItemTotal.setText(Util.toStringDinheiro(roupa.getValorDouble() * spinnerQtd.getValue()));
+                }
+            }
+        });
+        spinnerQtd.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && oldValue != null) {
+                lbItemTotal.setText(Util.toStringDinheiro(Double.parseDouble(tfItemValorUni.getText()) * newValue));
+                lbMaxDisponivel
+                        .setText(String.valueOf(Integer.parseInt(lbMaxDisponivel.getText()) - (newValue - oldValue)));
+            }
+        });
+        tfItemValorUni.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.isEmpty()) {
+                lbItemTotal.setText(Util.toStringDinheiro(Double.parseDouble(newValue) * spinnerQtd.getValue()));
+            }
+        });
     }
 
     private void setStyles() {
@@ -209,6 +264,8 @@ public class CondicionalController {
     }
 
     private void condicionalShowDialog(Condicional condicional) {
+        carregaCBoxCliente();
+        carregaCBoxAtendente();
         setDados(condicional);
         showTelaCondicionalTrasition();
     }
@@ -254,16 +311,16 @@ public class CondicionalController {
         this.condicional = condicional;
         btRemoverItem.setDisable(true);
         if (condicional != null) {
-            tfNomeCliente.setText(condicional.getNomeCliente());
-            tfNomeAtendente.setText(condicional.getNomeAtendente());
+            String key = condicional.getCliente().getId() + " : " + condicional.getCliente().getNome();
+            cbCliente.selectionModelProperty().get().select(key);
+            key = condicional.getAtendente().getId() + " : " + condicional.getAtendente().getNome();
+            cbAtendente.selectionModelProperty().get().select(key);
             lbData.setText(condicional.getDataString());
             lbNItens.setText(condicional.getQtd() + "");
             lbTotal.setText(condicional.getValor());
             iTitulo.setText("Alterar Condicional - ID: " + condicional.getId());
             carregarTabViewItens1(condicional.getItensDeCondicional());
         } else {
-            tfNomeCliente.setText("");
-            tfNomeAtendente.setText("");
             lbData.setText("");
             lbNItens.setText("");
             lbTotal.setText("");
@@ -273,14 +330,13 @@ public class CondicionalController {
     }
 
     private void itemShowDialog() {
-        spinnerQtd.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10, 1));
-        itemTitulo.setText("Inserir Item");
+        carregaCBoxRoupa();
         showTelaAddItemTrasition();
     }
 
     private void showTelaAddItemTrasition() {
         transitionTelaAddItem = new TranslateTransition(Duration.seconds(0.3), telaAddItem);
-        double x = -(telaPrincipal.getWidth() / 2) - (telaAddItem.getWidth()/2) - 17;
+        double x = -(telaPrincipal.getWidth() / 2) - (telaAddItem.getWidth() / 2) - 17;
         double y = -(telaPrincipal.getHeight() / 2) - (telaAddItem.getHeight());
         transitionTelaAddItem.setToX(ativeTelaAddItem ? 0 : x);
         transitionTelaAddItem.setToY(ativeTelaAddItem ? 0 : y);
@@ -289,5 +345,39 @@ public class CondicionalController {
             telaDialog.setDisable(ativeTelaAddItem);
         });
         transitionTelaAddItem.play();
+    }
+
+    private void carregaCBoxRoupa() {
+        listaRoupa = roupaDAO.listar();
+        if (listaRoupa.size() > 0) {
+            List<String> roupaList = new ArrayList<>();
+            listaRoupa.forEach(roupa -> roupaList.add(roupa.getId() + " : " + roupa.getNome()));
+            cbRoupa.setItems(FXCollections.observableArrayList(roupaList));
+            new UtilAutoCompleteComboBox(cbRoupa);
+        }
+    }
+
+    private void carregaCBoxAtendente() {
+        listaAtendente = atendenteDAO.listar();
+        if (listaAtendente.size() > 0) {
+            List<String> atendenteList = new ArrayList<>();
+            listaAtendente.forEach(atendente -> atendenteList.add(atendente.getId() + " : " + atendente.getNome()));
+            cbAtendente.setItems(FXCollections.observableArrayList(atendenteList));
+            // Implementa o AutoComplete utilizando a classe utilAutoCompleteComboBox
+            new UtilAutoCompleteComboBox<>(cbAtendente);
+        }
+
+    }
+
+    private void carregaCBoxCliente() {
+        listaCliente = clienteDAO.listar();
+        if (listaCliente.size() > 0) {
+            List<String> clienteList = new ArrayList<>();
+            listaCliente.forEach(cliente -> clienteList.add(cliente.getId() + " : " + cliente.getNome()));
+            cbCliente.setItems(FXCollections.observableArrayList(clienteList));
+            // Implementa o AutoComplete utilizando a classe utilAutoCompleteComboBox
+            new UtilAutoCompleteComboBox<>(cbCliente);
+            cbCliente.requestFocus();
+        }
     }
 }
