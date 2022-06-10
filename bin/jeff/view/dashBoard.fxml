@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448" prefWidth="590" styleClass="navbar" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jeff.controller.DashBoard">
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 20px; -fx-background-color: white;" BorderPane.alignment="CENTER">
-         <children>
-            <Label layoutX="198.0" layoutY="168.0" text="Gráfico: Roupas em Condicional" />
-            <JFXComboBox fx:id="jfxComboBox" layoutX="169.0" layoutY="108.0" prefHeight="25.0" prefWidth="315.0" />
-            <JFXButton buttonType="RAISED" layoutX="492.0" layoutY="108.0" onMouseClicked="#actionGetSelected" prefHeight="31.0" prefWidth="87.0" ripplerFill="#e60b0b" />
-            <JFXCheckBox fx:id="checkBox" layoutX="81.0" layoutY="121.0" onAction="#actionAllPesquisa" text="all" />
-         </children>
          <BorderPane.margin>
             <Insets bottom="5.0" right="7.0" />
          </BorderPane.margin>

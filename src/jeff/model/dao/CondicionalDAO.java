@@ -194,7 +194,6 @@ public class CondicionalDAO {
             if (resultado.next()) {
                 Atendente atendente = new Atendente();
                 Cliente cliente = new Cliente();
-                List<ItensCondicional> itensCondicional = new ArrayList<>();
 
                 condicional.setId(resultado.getInt("id_condicional"));
                 cliente.setId(resultado.getInt("id_cliente"));
@@ -243,7 +242,7 @@ public class CondicionalDAO {
 
     public Map<Integer, ArrayList> listarQuantidadeCondicionalsPorMes() {
         String sql = "select count(id_condicional), extract(year from data_hora) as ano, extract(month from data_hora) as mes from condicional group by ano, mes order by ano, mes";
-        Map<Integer, ArrayList> retorno = new HashMap<>();
+        Map<Integer, ArrayList> retorno = new HashMap<Integer, ArrayList>();
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);

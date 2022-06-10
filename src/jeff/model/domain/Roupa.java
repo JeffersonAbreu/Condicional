@@ -87,7 +87,7 @@ public class Roupa implements Serializable {
         setNome(keyArray[1]);
     }
 
-    public boolean temEstoqueDisponinel() {
-        return qtd - qtd_em_condicional > 0;
+    public int estoqueDisponinel() {
+        return qtd - qtd_em_condicional;
     }
 }

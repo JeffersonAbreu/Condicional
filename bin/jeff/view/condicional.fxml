@@ -237,11 +237,14 @@
                         <Label text="Valor Unit." GridPane.rowIndex="1" />
                         <HBox alignment="CENTER_LEFT" prefHeight="32.0" prefWidth="328.0" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <children>
-                              <TextField fx:id="tfItemValorUni" alignment="CENTER" maxWidth="80.0" prefHeight="28.0" text="0.0" />
+                              <TextField fx:id="tfItemValorUni" alignment="CENTER" disable="true" maxWidth="80.0" prefHeight="28.0" text="0.0" />
                               <Label text="    Qtd." />
-                              <Spinner fx:id="spinnerQtd" editable="true" prefHeight="25.0" prefWidth="75.0" stylesheets="@css/spinner.css" />
+                              <Spinner fx:id="spinnerQtd" disable="true" prefHeight="25.0" prefWidth="75.0" stylesheets="@css/spinner.css" />
                               <Label text="   Max. Disponível:" />
-                              <Label fx:id="lbMaxDisponivel" text="000" />
+                              <Label fx:id="lbMaxDisponivel" text="000">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font></Label>
                            </children>
                         </HBox>
                         <JFXComboBox fx:id="cbRoupa" prefHeight="25.0" prefWidth="331.0" GridPane.columnIndex="2" />
