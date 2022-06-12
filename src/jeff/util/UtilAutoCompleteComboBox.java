@@ -20,16 +20,12 @@ public class UtilAutoCompleteComboBox<T> implements EventHandler<KeyEvent> {
         this.comboBox = comboBox;
         sb = new StringBuilder();
         data = comboBox.getItems();
-
         this.comboBox.setEditable(true);
-        this.comboBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
-            @Override
-            public void handle(KeyEvent t) {
-                comboBox.hide();
-            }
+        this.comboBox.setOnKeyPressed(event -> {
+            comboBox.hide();
         });
         this.comboBox.setOnKeyReleased(UtilAutoCompleteComboBox.this);
+        this.comboBox.setStyle(".combo-box-popup > .list-view {-fx-min-height: 200}");
     }
 
     @Override

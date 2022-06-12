@@ -61,7 +61,6 @@ public class HomeController {
         if (!closeAtivo) {
 
         } else {
-            System.out.println("Saiu daqui");
         }
         closeAtivo = !closeAtivo;
     }

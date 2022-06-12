@@ -19,6 +19,7 @@ public class Condicional implements Serializable {
     private List<ItensCondicional> itensDeCondicional = new ArrayList<ItensCondicional>();
 
     public Condicional() {
+        this.id = 0;
         this.setData(LocalDate.now());
         this.setValor(0.0);
         this.setQtd(0);
@@ -118,18 +119,22 @@ public class Condicional implements Serializable {
 
     @Override
     public String toString() {
-        return "Condicional [atendente=" + getNomeAtendente() + ", cliente=" + getNomeCliente() + ", data=" + data + ", id=" + id
+        return "Condicional : id =" + id + "\n\tatendente = " + getAtendente().getKey() + "\n\t cliente="
+                + getCliente().getKey() + "\n[ data=" + data
                 + ", qtd=" + qtd + ", ativo=" + ativo + ", valor=" + valor + "]";
     }
 
     public void updateItens(List<ItensCondicional> itensNovos) {
-        this.itensDeCondicional = new ArrayList<ItensCondicional>();
-        this.setQtd(0);
-        this.setValor(0.0);
-        itensNovos.forEach(item -> {
+        Integer qtd = 0;
+        Double valorTotal = 0.0;
+        this.itensDeCondicional = new ArrayList<>();
+
+        for (ItensCondicional item : itensNovos) {
             this.itensDeCondicional.add(item);
-            this.setQtd(this.getQtd() + item.getQtd());
-            this.setValor(this.getValorDouble() + item.getValorTotalDouble());
-        });
+            qtd += item.getQtd();
+            valorTotal += item.getValorTotalDouble();
+        }
+        this.setQtd(qtd);
+        this.setValor(valorTotal);
     }
 }

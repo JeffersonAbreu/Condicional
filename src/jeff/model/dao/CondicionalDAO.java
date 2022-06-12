@@ -223,21 +223,34 @@ public class CondicionalDAO {
         return retorno;
     }
 
-    public Condicional buscarUltimaCondicional() {
-        String sql = "SELECT max(id_condicional) FROM condicional";
-        Condicional retorno = new Condicional();
+    public Integer getLastId() {
+        String sql = "SELECT MAX(id_condicional) FROM CONDICIONAL";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet resultado = stmt.executeQuery();
 
             if (resultado.next()) {
-                retorno.setId(resultado.getInt("max"));
-                return retorno;
+                return resultado.getInt(1);
             }
         } catch (SQLException ex) {
             Logger.getLogger(CondicionalDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return retorno;
+        return null;
+    }
+
+    public double getSomaValorTotalPorCliente(Cliente cliente) {
+        String sql = "SELECT SUM(valor) soma FROM CONDICIONAL WHERE id_cliente = ? AND ativo = 1";
+        Double valor = null;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, cliente.getId());
+            ResultSet resultado = stmt.executeQuery();
+            if (resultado.next())
+                valor = resultado.getDouble("soma");
+        } catch (SQLException ex) {
+            Logger.getLogger(CondicionalDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return valor == null ? 0.0 : valor;
     }
 
     public Map<Integer, ArrayList> listarQuantidadeCondicionalsPorMes() {

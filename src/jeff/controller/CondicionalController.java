@@ -2,6 +2,7 @@ package jeff.controller;
 
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +29,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import jeff.model.dao.AtendenteDAO;
 import jeff.model.dao.ClienteDAO;
 import jeff.model.dao.CondicionalDAO;
+import jeff.model.dao.ItensCondicionalDAO;
 import jeff.model.dao.RoupaDAO;
 import jeff.model.database.Database;
 import jeff.model.database.DatabaseFactory;
@@ -44,6 +47,9 @@ import jeff.model.domain.ItensCondicional;
 import jeff.model.domain.Roupa;
 import jeff.util.Util;
 import jeff.util.UtilAutoCompleteComboBox;
+import tray.animations.AnimationType;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 public class CondicionalController {
     @FXML
@@ -90,7 +96,8 @@ public class CondicionalController {
     @FXML
     private Spinner<Integer> spinnerQtd;
     @FXML
-    private Label iTitulo, lbData, lbTotal, lbItemTotal, lbMaxDisponivel, lbNItens;
+    private Label iTitulo, lbNomeCliente, lbData, lbTotal, lbItemTotal, lbMaxDisponivel, lbNItens,
+            lbCLienteValorMaxDisponivel;
 
     // minhas instancias
     List<Cliente> listaCliente;
@@ -105,6 +112,7 @@ public class CondicionalController {
     private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
     private final Connection connection = database.conectar();
     private final CondicionalDAO condicionalDAO = new CondicionalDAO();
+    private final ItensCondicionalDAO itensCondicionalDAO = new ItensCondicionalDAO();
     private final ClienteDAO clienteDAO = new ClienteDAO();
     private final AtendenteDAO atendenteDAO = new AtendenteDAO();
     private final RoupaDAO roupaDAO = new RoupaDAO();
@@ -115,6 +123,7 @@ public class CondicionalController {
     private TranslateTransition transitionTelaCondicional, transitionTelaAddItem;
     private boolean ativeTelaCondicional = false;
     private boolean ativeTelaAddItem = false;
+    private Double valorDisponivel = 0.0;
 
     @FXML
     void initialize() {
@@ -146,12 +155,12 @@ public class CondicionalController {
 
         stylesDasTabelas();
 
-        tabCondicional.setOnMouseClicked(event -> {
-            Condicional condicional = tabCondicional.getSelectionModel().getSelectedItem();
-            if (condicional != null) {
-                carregarTabViewItens(condicional);
+        tabCondicional.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                carregarTabViewItens(newValue);
                 btAlterar.setDisable(false);
                 btExcluir.setDisable(false);
+                this.condicional = newValue;
             }
         });
         tabItens.setOnMouseClicked(event -> {
@@ -172,22 +181,22 @@ public class CondicionalController {
 
     private void actionsTelaCondicional() {
         cbCliente.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !cbCliente.getSelectionModel().getSelectedItem().equals(oldValue)) {
-                try {
-                    Cliente cliente = new Cliente();
-                    cliente.setKey(newValue);
-                    cliente = clienteDAO.buscar(cliente);
-                    if (cliente != null)
-                        this.condicional.setCliente(cliente);
-                } catch (Exception e) {
-                    cbCliente.getEditor().setText("");
-                } finally {
-                    Cliente cliente = this.condicional.getCliente();
-                    if (cliente == null)
-                        cbCliente.getSelectionModel().clearSelection();
-                    else
-                        cbCliente.getSelectionModel().select(cliente.getKey());
+            Cliente cliente = new Cliente();
+            try {
+                cliente.setKey(newValue);
+                cliente = clienteDAO.buscar(cliente);
+                if (cliente != null)
+                    this.condicional.setCliente(cliente);
+            } catch (Exception e) {
+                cbCliente.getEditor().setText("");
+            } finally {
+                cliente = this.condicional.getCliente();
+                if (cliente == null) {
+                    cbCliente.getSelectionModel().clearSelection();
+                } else {
+                    cbCliente.getSelectionModel().select((cliente.getKey()));
                 }
+                telaCondicional_UPDATE_valorDisponivel();
             }
         });
 
@@ -197,7 +206,6 @@ public class CondicionalController {
                     Atendente atendente = new Atendente();
                     atendente.setKey(newValue);
                     atendente = atendenteDAO.buscar(atendente);
-                    System.out.println(atendente);
                     if (atendente != null)
                         this.condicional.setAtendente(atendente);
                 } catch (Exception e) {
@@ -213,17 +221,155 @@ public class CondicionalController {
         });
     }
 
+    private void telaCondicional_UPDATE_valorDisponivel() {
+        if (this.condicional.getCliente() == null) {
+            lbCLienteValorMaxDisponivel.setText("R$   -");
+        } else {
+            double limiteCliente = this.condicional.getCliente().getLimiteDouble();
+            double valorDessaCondicional = this.condicional.getValorDouble();
+            double valorDebitosAtivos = condicionalDAO.getSomaValorTotalPorCliente(this.condicional.getCliente());
+            double valorDessaCondi_no_DB = 0.0;
+            System.out.println("\n\nLimite desse Cliente: \t\t" + Util.toStringDinheiro(limiteCliente));
+            System.out.println("Valor dos debitos ativos: \t" + Util.toStringDinheiro(valorDebitosAtivos));
+            System.out.println("Valor dessa Condi.: \t\t" + Util.toStringDinheiro(valorDessaCondicional));
+
+            valorDisponivel = limiteCliente - valorDebitosAtivos;
+            if (this.condicional.getId() != 0) {
+                valorDessaCondi_no_DB = condicionalDAO.buscar(condicional).getValorDouble();
+                System.out.println("Valor disponivel old: \t\t" + Util.toStringDinheiro(valorDisponivel));
+                valorDisponivel += valorDessaCondi_no_DB;
+            }
+            valorDisponivel -= valorDessaCondicional;
+            System.out.println("Valor disponivel new: \t\t" + Util.toStringDinheiro(valorDisponivel));
+            lbCLienteValorMaxDisponivel.setText(Util.toStringDinheiro(valorDisponivel));
+
+            if (valorDisponivel <= 0.0)
+                lbCLienteValorMaxDisponivel.setStyle("-fx-text-fill: red");
+            else
+                lbCLienteValorMaxDisponivel.setStyle("-fx-text-fill: black");
+        }
+    }
+
     @FXML
     void acaoClickedBtCancel(ActionEvent event) {
         carregarTabViewCondicional();
         telaCondicional_TRANSITION();
         btAlterar.setDisable(true);
         btExcluir.setDisable(true);
+        this.condicional = new Condicional();
     }
 
     @FXML
     void acaoClickedBtOK(ActionEvent event) {
+        if (isValid()) {
+            try {
+                connection.setAutoCommit(false);
+                condicionalDAO.setConnection(connection);
+                itensCondicionalDAO.setConnection(connection);
+                roupaDAO.setConnection(connection);
 
+                // Novo registro
+                if (condicional.getId() == 0) {
+                    condicionalDAO.inserir(condicional);
+                    this.condicional.setId(condicionalDAO.getLastId());
+                } else { // Alteração de registro
+                    condicionalDAO.alterar(condicional);
+                    for (ItensCondicional item : itensCondicionalDAO.listarPorCondicional(condicional)) {
+                        Roupa roupa = item.getRoupa();
+                        int qtdOld = roupa.getQtd_em_condicional();
+                        int qtdNew = qtdOld - item.getQtd();
+                        roupa.setQtd_em_condicional(qtdNew);
+                        roupaDAO.alterar(roupa);
+                        item.setCondicional(this.condicional);
+                        itensCondicionalDAO.remover(item);
+                    }
+                }
+                // atualizando o condicional dos itens
+                for (int i = 0; i < this.condicional.getItensCondicional().size(); i++) {
+                    this.condicional.getItensCondicional().get(i).setCondicional(this.condicional);
+                }
+                // inserindo itens
+                for (ItensCondicional item : condicional.getItensCondicional()) {
+                    roupaDAO.alterar(item.getRoupa());
+                    itensCondicionalDAO.inserir(item);
+                }
+                connection.commit();
+                TrayNotification tray = new TrayNotification();
+                tray.setRectangleFill(Paint.valueOf("#8846a2"));
+                tray.setTitle("Salvo com Sucesso!");
+                tray.setMessage("A condicional Nº " + this.condicional.getId() + " foi salva!");
+                tray.setAnimationType(AnimationType.POPUP);
+                tray.setNotificationType(NotificationType.SUCCESS);
+                tray.showAndDismiss(Duration.seconds(10));
+            } catch (SQLException e) {
+                try {
+                    connection.rollback();
+                    TrayNotification tray = new TrayNotification("ERRO", "Houve um problema ao Salvar!",
+                            NotificationType.ERROR);
+                    tray.setAnimationType(AnimationType.POPUP);
+                    tray.showAndDismiss(Duration.seconds(10));
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+
+            } finally {
+                acaoClickedBtCancel(event);
+                try {
+                    connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private boolean isValid() {
+        if (condicional.getCliente() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText("Cliente não selecionado");
+            alert.setContentText("Selecione um cliente para continuar");
+            alert.showAndWait();
+            cbCliente.getEditor().setStyle("-fx-border-color: red");
+            cbCliente.requestFocus();
+            cbCliente.show();
+            return false;
+        } else {
+            cbCliente.getEditor().setStyle("-fx-border-color: none");
+        }
+        if (condicional.getAtendente() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText("Atendente não selecionado");
+            alert.setContentText("Selecione um atendente para continuar");
+            alert.showAndWait();
+            cbAtendente.getEditor().setStyle("-fx-border-color: red");
+            cbAtendente.requestFocus();
+            cbAtendente.show();
+            return false;
+        } else {
+            cbAtendente.getEditor().setStyle("-fx-border-color: none");
+        }
+        if (condicional.getItensCondicional().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText("Nenhum item adicionado");
+            alert.setContentText("Adicione pelo menos um item para continuar");
+            alert.showAndWait();
+            return false;
+        } else {
+            this.condicional.updateItens(tabItens1.getItems());
+            if (valorDisponivel < 0) {
+                TrayNotification tray = new TrayNotification("ERRO", "O limete foi excedido!",
+                        NotificationType.ERROR);
+                tray.setAnimationType(AnimationType.POPUP);
+                tray.showAndDismiss(Duration.seconds(10));
+                return false;
+            }
+        }
+        return true;
     }
 
     @FXML
@@ -239,6 +385,7 @@ public class CondicionalController {
         lbMaxDisponivel.setText("0");
         lbItemTotal.setText("0");
         btOkAddItem.setDisable(true);
+        cbRoupa.getEditor().setText("");
     }
 
     @FXML
@@ -252,7 +399,6 @@ public class CondicionalController {
                 break;
             }
         }
-        System.out.println("se existe: " + obsListaCondicional.contains(this.itensCondicional));
         if (!jaExiste) {
             obsListaItensDialog.add(this.itensCondicional);
             update = true;
@@ -266,7 +412,6 @@ public class CondicionalController {
             alert.initOwner(stage);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                System.out.println(obsListaItensDialog.get(index));
                 ItensCondicional item = obsListaItensDialog.get(index);
                 item.setQtd(item.getQtd() + this.itensCondicional.getQtd());
                 item.setValorUni(this.itensCondicional.getValorUniDouble());
@@ -281,7 +426,9 @@ public class CondicionalController {
             lbTotal.setText(condicional.getValor());
             carregarTabViewItensDialog(condicional.getItensCondicional());
             updateListaRoupas(itensCondicional);
-            showTelaAddItemTrasition();
+            limpaTelaItens();
+            cbRoupa.requestFocus();
+            telaCondicional_UPDATE_valorDisponivel();
         }
     }
 
@@ -323,33 +470,89 @@ public class CondicionalController {
 
     @FXML
     void actionAlterar(MouseEvent event) {
-        condicional = tabCondicional.getSelectionModel().getSelectedItem();
-        if (condicional != null) {
-            telaCondicional_SHOW(condicional);
+        this.condicional = tabCondicional.getSelectionModel().getSelectedItem();
+        if (this.condicional != null) {
+            telaCondicional_SHOW(this.condicional);
         }
     }
 
     @FXML
     void actionExcluir(MouseEvent event) {
-        condicionalDAO.remover(condicional);
-        tfPesquisa.setText("");
-        carregarTabViewCondicional();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Alerta");
+        alert.setHeaderText("Você está perto de excluir uma Condicional!");
+        alert.setContentText("Tem certeza que deseja excluir?");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        Stage stage = (Stage) telaPrincipal.getScene().getWindow();
+        alert.initOwner(stage);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            try {
+                connection.setAutoCommit(false);
+                condicionalDAO.setConnection(connection);
+                itensCondicionalDAO.setConnection(connection);
+                roupaDAO.setConnection(connection);
+
+                for (ItensCondicional item : itensCondicionalDAO.listarPorCondicional(condicional)) {
+                    Roupa roupa = item.getRoupa();
+                    int qtdOld = roupa.getQtd_em_condicional();
+                    int qtdNew = qtdOld - item.getQtd();
+
+                    roupa.setQtd_em_condicional(qtdNew);
+
+                    roupaDAO.alterar(roupa);
+
+                    itensCondicionalDAO.remover(item);
+                }
+                condicionalDAO.remover(condicional);
+                connection.commit();
+                TrayNotification tray = new TrayNotification("Olá", "A condicional foi excluida!",
+                        NotificationType.NOTICE);
+                tray.setAnimationType(AnimationType.POPUP);
+                tray.showAndDismiss(Duration.seconds(10));
+            } catch (SQLException e) {
+                try {
+                    connection.rollback();
+                    TrayNotification tray = new TrayNotification("ERRO", "Houve um problema ao excluir!",
+                            NotificationType.ERROR);
+                    tray.setAnimationType(AnimationType.POPUP);
+                    tray.showAndDismiss(Duration.seconds(10));
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+
+            } finally {
+                carregarTabViewCondicional();
+                tabCondicional.requestFocus();
+                btAlterar.setDisable(true);
+                btExcluir.setDisable(true);
+            }
+        } else {
+            TrayNotification tray = new TrayNotification("Olá", "Estou vendo que você desistiu de excluir!",
+                    NotificationType.NOTICE);
+            tray.setAnimationType(AnimationType.POPUP);
+            tray.showAndDismiss(Duration.seconds(10));
+        }
     }
 
     @FXML
     void actionPesquisar(MouseEvent event) {
         carregarTabViewCondicional();
         tfPesquisa.requestFocus();
+        btAlterar.setDisable(true);
+        btExcluir.setDisable(true);
     }
 
     @FXML
     void actionRemoverItem(MouseEvent event) {
-        ItensCondicional itensCondicional = tabItens1.getSelectionModel().getSelectedItem();
-        obsListaItensDialog.remove(itensCondicional);
+        ItensCondicional item = tabItens1.getSelectionModel().getSelectedItem();
+        obsListaItensDialog.remove(item);
         condicional.updateItens(obsListaItensDialog);
-        itensCondicional.setQtd(itensCondicional.getQtd() * -1);
-        updateListaRoupas(itensCondicional);
+        item.setQtd(item.getQtd() * -1);
+        updateListaRoupas(item);
         telaCondicional_UPDATE(this.condicional);
+        telaCondicional_UPDATE_valorDisponivel();
     }
 
     // INICIO - TELA CONDICIONAL
@@ -381,10 +584,19 @@ public class CondicionalController {
         if (condicional != null) {
             iTitulo.setText("Alterar Condicional - ID: " + condicional.getId());
             telaCondicional_UPDATE(this.condicional);
+            System.out.println(cbCliente.getOpacity());
+            cbCliente.setDisable(true);
+            cbCliente.setVisible(false);
+            lbNomeCliente.setVisible(true);
+            lbNomeCliente.setText(condicional.getCliente().getKey());
         } else {
             iTitulo.setText("Inserir Condicional");
             telaCondicional_UPDATE(new Condicional());
+            cbCliente.setDisable(false);
+            cbCliente.setVisible(true);
+            lbNomeCliente.setVisible(false);
         }
+        telaCondicional_UPDATE_valorDisponivel();
     }
 
     private void telaCondicional_UPDATE(Condicional condicional) {
@@ -427,7 +639,7 @@ public class CondicionalController {
             });
         }
         mapRoupas.forEach((key, value) -> roupaList.add(value.getKey()));
-        if (mapRoupas.size() > 0) {
+        if (!mapRoupas.isEmpty()) {
             cbRoupa.setItems(FXCollections.observableArrayList(roupaList));
             new UtilAutoCompleteComboBox<String>(cbRoupa);
         }
@@ -440,7 +652,6 @@ public class CondicionalController {
                 Roupa roupa = new Roupa();
                 try {
                     roupa.setKey(newValue);
-                    System.out.println(newValue);
                     if (mapRoupas.containsKey(roupa.getId())) {
                         roupa = mapRoupas.get(roupa.getId());
                         this.itensCondicional.setRoupa(roupa);
@@ -528,12 +739,13 @@ public class CondicionalController {
         obsListaCondicional = FXCollections.observableArrayList(
                 condicionalDAO.listarPorNomeCliente(tfPesquisa.getText()));
         tabCondicional.setItems(obsListaCondicional);
+        tabItens.getItems().clear();
     }
 
     private void showTelaAddItemTrasition() {
         transitionTelaAddItem = new TranslateTransition(Duration.seconds(0.3), telaAddItem);
         double x = -(telaPrincipal.getWidth() / 2) - (telaAddItem.getWidth() / 2) - 17;
-        double y = -(telaPrincipal.getHeight() / 2) - (telaAddItem.getHeight());
+        double y = -(telaPrincipal.getHeight() / 2) - (telaAddItem.getHeight()) + 70;
         transitionTelaAddItem.setToX(ativeTelaAddItem ? 0 : x);
         transitionTelaAddItem.setToY(ativeTelaAddItem ? 0 : y);
         transitionTelaAddItem.setOnFinished(event -> {

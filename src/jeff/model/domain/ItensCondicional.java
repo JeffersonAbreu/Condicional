@@ -82,7 +82,7 @@ public class ItensCondicional implements Serializable {
 
     @Override
     public String toString() {
-        return "ItensCondicional [condicional=" + condicional + ", qtd=" + qtd + ", roupa=" + roupa + ", valor_total="
+        return "ItensCondicional [condicionalID=" + condicional.getId() + ", qtd=" + qtd + ", roupa=" + roupa + ", valor_total="
                 + getValorTotal() + ", valor_uni=" + getValorUni() + "]";
     }
 

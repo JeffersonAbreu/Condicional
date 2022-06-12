@@ -61,8 +61,10 @@
 
 .buttonOK:hover {
     -fx-background-color: #008CBA;
-    -fx-color: white;
+    -fx-text-fill: #f0f0f0;
     -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-border-style: solid;
 }
 
 .buttonCancel {
@@ -77,8 +79,10 @@
 
 .buttonCancel:hover {
     -fx-background-color: #f44336;
-    -fx-color: white;
+    -fx-text-fill: #f0f0f0;
     -fx-border-radius: 14px;
+    -fx-background-radius: 14px;
+    -fx-border-style: solid;
 }
 
 .teste:hover {
