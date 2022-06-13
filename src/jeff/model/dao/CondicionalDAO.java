@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -253,25 +254,25 @@ public class CondicionalDAO {
         return valor == null ? 0.0 : valor;
     }
 
-    public Map<Integer, ArrayList> listarQuantidadeCondicionalsPorMes() {
-        String sql = "select count(id_condicional), extract(year from data_hora) as ano, extract(month from data_hora) as mes from condicional group by ano, mes order by ano, mes";
-        Map<Integer, ArrayList> retorno = new HashMap<Integer, ArrayList>();
+    public ArrayList<ArrayList<String>> listarTotalCondicionaisClientePorData(LocalDate inicio, LocalDate fim) {
+        String sql = "SELECT c.id_cliente, nome, SUM(valor) AS total FROM cliente c INNER JOIN condicional con ON con.id_cliente= c.id_cliente GROUP BY c.id_cliente HAVING data_hora BETWEEN ? AND ? ORDER BY total";
+        ArrayList<ArrayList<String>> retorno = new ArrayList<ArrayList<String>>();
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setDate(1, Date.valueOf(inicio));
+            stmt.setDate(2, Date.valueOf(fim));
             ResultSet resultado = stmt.executeQuery();
 
             while (resultado.next()) {
-                ArrayList linha = new ArrayList<>();
-                if (!retorno.containsKey(resultado.getInt("ano"))) {
-                    linha.add(resultado.getInt("mes"));
-                    linha.add(resultado.getInt("count"));
-                    retorno.put(resultado.getInt("ano"), linha);
-                } else {
-                    ArrayList linhaNova = retorno.get(resultado.getInt("ano"));
-                    linhaNova.add(resultado.getInt("mes"));
-                    linhaNova.add(resultado.getInt("count"));
-                }
+                String id = String.valueOf(resultado.getInt("id_cliente"));
+                String nome = resultado.getString("nome");
+                String total = String.valueOf(resultado.getDouble("total"));
+                ArrayList<String> linha = new ArrayList<String>();
+                linha.add(id);
+                linha.add(nome);
+                linha.add(total);
+                retorno.add(linha);
             }
             return retorno;
         } catch (SQLException ex) {

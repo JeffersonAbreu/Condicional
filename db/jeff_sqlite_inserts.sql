@@ -28,8 +28,8 @@ INSERT INTO
         limite
     )
 VALUES
-    ('Luciana V. Moreira','32516305200000','11111111111','lu@moreira.com','','','Rua Ceu Claro','Alto','Vitória','ES','29000000',1000.0),
-    ('Juliana Garcia','32516305200000','11111111111','lu@moreira.com','','','Rua Ceu Claro','Alto','Vitória','ES','29000000',100.0),
+    ('Luciana V. Moreira','32516305200000','11111111111','lu@moreira.com','','999900000','Rua Ceu Claro','Alto','Vitória','ES','29000000',1000.0),
+    ('Juliana Garcia','32516305200000','11111111111','lu@moreira.com','','9999900000','Rua Ceu Claro','Alto','Vitória','ES','29000000',100.0),
     ('Helen','32516305200000','22222222233','hele@gmail.com','','99999999','Rua Ceu Claro','Amarela','Castanhal','RJ','34.200-300',200.0),
     ('Danielly','10061978','052.647.985-25','dam@hotmail.com','','99969-3340','Colinas','Amarelo','Cachoeiro de Itapemirim','ES','29.300-000',2000.00),
     ('Genoveva','25101970','555.879.714-56','geno@outlook.com','','99909-1035','Rua das flores','Aeroport','Cachoeiro de Itapemirim','Es','29.300-000',1000.00),
@@ -135,65 +135,3 @@ VALUES
 ('Bolsa, preta, sintética','89,90',4,0),
 ('Bolsa, marron, couro ','899,90',5,0),
 ('Short, cinza, M','39,90',1,0);
-
-
-
-
-
-INSERT INTO
-    CONDICIONAL (
-        id_cliente,
-        id_atendente,
-        data_hora,
-        valor,
-        qtd,
-        ativo
-    )
-VALUES
-    (
-        2,
-        1,
-        '947716055',
-        '300,00',
-        1,
-        1
-    ),
-    (
-        3,
-        2,
-        '947716055',
-        '159,98',
-        2,
-        1
-    );
-
-INSERT INTO
-    ITENS_CONDICIONAL (
-        id_condicional,
-        id_roupa,
-        valor_uni,
-        qtd,
-        valor_total
-    )
-VALUES
-    (
-        1,
-        1,
-        '300,00',
-        1,
-        '300,00'
-    ),
-    (
-        2,
-        10,
-        '59,99',
-        1,
-        '59,99'
-    ),
-    (
-        2,
-        9,
-        '99,99',
-        1,
-        '99,99'
-    );

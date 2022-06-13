@@ -3,6 +3,7 @@ package jeff.controller;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -273,6 +274,7 @@ public class CondicionalController {
                     condicionalDAO.inserir(condicional);
                     this.condicional.setId(condicionalDAO.getLastId());
                 } else { // Alteração de registro
+                    // condicional.setData(LocalDate.of(2022, 03, 01));
                     condicionalDAO.alterar(condicional);
                     for (ItensCondicional item : itensCondicionalDAO.listarPorCondicional(condicional)) {
                         Roupa roupa = item.getRoupa();

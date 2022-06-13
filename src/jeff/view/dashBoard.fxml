@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448" prefWidth="590" styleClass="navbar" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jeff.controller.DashBoard">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448" prefWidth="590" styleClass="navbar" stylesheets="@css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jeff.controller.DashBoard">
    <center>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 20px; -fx-background-color: white;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 20px; -fx-background-color: white;" stylesheets="@css/date_picker.css" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="5.0" right="7.0" />
          </BorderPane.margin>
+         <children>
+            <PieChart fx:id="graficoPizza" layoutX="42.0" layoutY="43.0" title="Total em Condicional por Cliente" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" />
+            <ButtonBar layoutX="365.0" layoutY="15.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="570.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="0.0">
+              <buttons>
+                  <Label alignment="CENTER_RIGHT" maxWidth="60.0" text="Data inicial" />
+                  <DatePicker fx:id="dpInicio" minWidth="199.0" promptText="20-10-1999" />
+                  <Label alignment="CENTER_RIGHT" maxWidth="60.0" text="Data final" />
+                  <DatePicker fx:id="dpFinal" minWidth="199.0" />
+                <Button maxWidth="80.0" mnemonicParsing="false" onAction="#actionBuscar" styleClass="nav" text="Buscar" />
+              </buttons>
+               <opaqueInsets>
+                  <Insets right="20.0" />
+               </opaqueInsets>
+            </ButtonBar>
+         </children>
       </AnchorPane>
    </center>
 </BorderPane>
