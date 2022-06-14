@@ -1,0 +1,28 @@
+TableView {
+    -fx-background-radius: 15px 15px 15px 15px;
+    -fx-border-radius: 15px 15px 15px 15px;
+    -fx-background-color: transparent;
+    -fx-border-style: none;
+}
+
+TableColumnHeader {
+    -fx-background-color: linear-gradient(#8846a2, #939);
+    -fx-alignment: CENTER;
+    -fx-text-fill: white;
+}
+
+TableColumnHeader.left {
+    -fx-border-radius: 12px 0 0 0;
+    -fx-background-radius: 12px 0 0 0;
+}
+
+TableColumnHeader.rigth {
+    -fx-border-radius: 0 12px 0 0;
+    -fx-background-radius: 0 12px 0 0;
+}
+
+TableColumn:hover {
+    -fx-background-color: #939;
+    -fx-alignment: CENTER;
+    -fx-text-fill: white;
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448" prefWidth="590" styleClass="navbar" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jeff.controller.RelatorioController">
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 20px; -fx-background-color: white;" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" right="7.0" />
+         </BorderPane.margin>
+         <children>
+            <VBox alignment="CENTER" layoutX="242.0" layoutY="115.0" spacing="20.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <VBox fx:id="telaPrincipal" layoutX="6.0" layoutY="14.0" AnchorPane.bottomAnchor="10.0" AnchorPane.topAnchor="10.0">
+                     <children>
+                        <AnchorPane style="-fx-background-color: #ffffff;">
+                           <children>
+                              <HBox layoutY="1.0" nodeOrientation="LEFT_TO_RIGHT" spacing="5.0">
+                                 <children>
+                                    <JFXComboBox fx:id="cbFiltro" focusColor="#405aa800" prefHeight="25.0" prefWidth="275.0" promptText="Selecione uma Opção..." unFocusColor="#c02db4" viewOrder="10.0">
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" left="3.0" />
+                                       </HBox.margin>
+                                    </JFXComboBox>
+                                    <JFXComboBox fx:id="cbCliente" focusColor="#405aa800" prefHeight="25.0" prefWidth="275.0" promptText="Selecione um Cliente..." unFocusColor="#c02db4" viewOrder="10.0" visible="false">
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" left="3.0" />
+                                       </HBox.margin>
+                                    </JFXComboBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </AnchorPane>
+                        <TableView fx:id="tabCondicional" prefHeight="337.0" prefWidth="583.0" stylesheets="@css/tab.css">
+                           <columns>
+                              <TableColumn fx:id="colIDCond" prefWidth="50.666566371917725" styleClass="left" text="ID" />
+                              <TableColumn fx:id="colCliente" prefWidth="203.9999885559082" text="Cliente" />
+                              <TableColumn fx:id="colAtendente" prefWidth="82.0" text="Atendente" />
+                              <TableColumn fx:id="colData" prefWidth="76.6666259765625" text="Data" />
+                              <TableColumn fx:id="colNItens" prefWidth="56.0001220703125" text="Nº Itens" />
+                              <TableColumn fx:id="colTotalCondi" prefWidth="82.66659545898438" styleClass="rigth" text="Total" />
+                           </columns>
+                        </TableView>
+                     </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets left="2.0" right="5.0" />
+                     </VBox.margin>
+                  </VBox>
+                  <HBox alignment="CENTER_RIGHT">
+                     <children>
+                        <Button fx:id="btImprimir" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#actionImprimir" prefHeight="7.0" prefWidth="134.0" styleClass="nav" stylesheets="@css/style.css" text="Imprimir">
+                           <font>
+                              <Font name="Courier New Bold" size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <opaqueInsets>
+                        <Insets right="10.0" />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets right="10.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
