@@ -96,21 +96,7 @@ public class ClienteDAO {
             PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
-                Cliente cliente = new Cliente();
-                cliente.setId(resultado.getInt("id_cliente"));
-                cliente.setNome(resultado.getString("nome"));
-                cliente.setData_nascimento(resultado.getDate("data_nascimento").toLocalDate());
-                cliente.setCpf(resultado.getString("cpf"));
-                cliente.setEmail(resultado.getString("email"));
-                cliente.setTelefone(resultado.getString("telefone"));
-                cliente.setCelular(resultado.getString("celular"));
-                cliente.setLogradouro(resultado.getString("logradouro"));
-                cliente.setBairro(resultado.getString("bairro"));
-                cliente.setCidade(resultado.getString("cidade"));
-                cliente.setUF(resultado.getString("uf"));
-                cliente.setCep(resultado.getString("cep"));
-                cliente.setLimite(resultado.getDouble("limite"));
-                clientes.add(cliente);
+                clientes.add(getCliente(resultado));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -126,23 +112,46 @@ public class ClienteDAO {
             stmt.setInt(1, cliente.getId());
             ResultSet resultado = stmt.executeQuery();
             if (resultado.next()) {
-                cliente.setNome(resultado.getString("nome"));
-                cliente.setData_nascimento(resultado.getDate("data_nascimento").toLocalDate());
-                cliente.setCpf(resultado.getString("cpf"));
-                cliente.setEmail(resultado.getString("email"));
-                cliente.setTelefone(resultado.getString("telefone"));
-                cliente.setCelular(resultado.getString("celular"));
-                cliente.setLogradouro(resultado.getString("logradouro"));
-                cliente.setBairro(resultado.getString("bairro"));
-                cliente.setCidade(resultado.getString("cidade"));
-                cliente.setUF(resultado.getString("uf"));
-                cliente.setCep(resultado.getString("cep"));
-                cliente.setLimite(resultado.getDouble("limite"));
-                retorno = cliente;
+                retorno = getCliente(resultado);
             }
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return retorno;
+    }
+
+    public List<Cliente> listarTodosComConticionalAtiva() {
+        String sql = "SELECT cl.* FROM condicional con INNER JOIN cliente cl "
+                + "ON cl.id_cliente = con.id_cliente WHERE cl.id_cliente = con.id_cliente "
+                + "AND con.ativo = 1 GROUP BY cl.id_cliente ORDER BY cl.id_cliente;";
+        List<Cliente> clientes = new ArrayList<>();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet resultado = stmt.executeQuery();
+            while (resultado.next()) {
+                clientes.add(getCliente(resultado));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return clientes;
+    }
+
+    private Cliente getCliente(ResultSet resultado) throws SQLException {
+        Cliente cliente = new Cliente();
+        cliente.setId(resultado.getInt("id_cliente"));
+        cliente.setNome(resultado.getString("nome"));
+        cliente.setData_nascimento(resultado.getDate("data_nascimento").toLocalDate());
+        cliente.setCpf(resultado.getString("cpf"));
+        cliente.setEmail(resultado.getString("email"));
+        cliente.setTelefone(resultado.getString("telefone"));
+        cliente.setCelular(resultado.getString("celular"));
+        cliente.setLogradouro(resultado.getString("logradouro"));
+        cliente.setBairro(resultado.getString("bairro"));
+        cliente.setCidade(resultado.getString("cidade"));
+        cliente.setUF(resultado.getString("uf"));
+        cliente.setCep(resultado.getString("cep"));
+        cliente.setLimite(resultado.getDouble("limite"));
+        return cliente;
     }
 }

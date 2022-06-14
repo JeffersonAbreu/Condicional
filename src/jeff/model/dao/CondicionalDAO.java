@@ -7,9 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,38 +98,7 @@ public class CondicionalDAO {
             }
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
-                Condicional condicional = new Condicional();
-                Atendente atendente = new Atendente();
-                Cliente cliente = new Cliente();
-                List<ItensCondicional> itensCondicional = new ArrayList<>();
-
-                condicional.setId(resultado.getInt("id_condicional"));
-                cliente.setId(resultado.getInt("id_cliente"));
-                atendente.setId(resultado.getInt("id_atendente"));
-                condicional.setData(resultado.getDate("data_hora").toLocalDate());
-                condicional.setValor(resultado.getDouble("valor"));
-                condicional.setQtd(resultado.getInt("qtd"));
-                condicional.setAtivo(resultado.getBoolean("ativo"));
-
-                // Obtendo os dados completos do Cliente associado à Condicional
-                ClienteDAO clienteDAO = new ClienteDAO();
-                clienteDAO.setConnection(connection);
-                cliente = clienteDAO.buscar(cliente);
-
-                // Obtendo Atendente
-                AtendenteDAO atendenteDAO = new AtendenteDAO();
-                atendenteDAO.setConnection(connection);
-                atendente = atendenteDAO.buscar(atendente);
-
-                // Obtendo os dados completos dos Itens de Condicional associados à Condicional
-                ItensCondicionalDAO itensCondicionalDAO = new ItensCondicionalDAO();
-                itensCondicionalDAO.setConnection(connection);
-                itensCondicional = itensCondicionalDAO.listarPorCondicional(condicional);
-
-                condicional.setCliente(cliente);
-                condicional.setAtendente(atendente);
-                condicional.setItensCondicional(itensCondicional);
-                retorno.add(condicional);
+                retorno.add(getCondicional(resultado));
             }
         } catch (SQLException ex) {
             Logger.getLogger(CondicionalDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -146,38 +113,7 @@ public class CondicionalDAO {
             PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
-                Condicional condicional = new Condicional();
-                Atendente atendente = new Atendente();
-                Cliente cliente = new Cliente();
-                List<ItensCondicional> itensCondicional = new ArrayList<>();
-
-                condicional.setId(resultado.getInt("id_condicional"));
-                cliente.setId(resultado.getInt("id_cliente"));
-                atendente.setId(resultado.getInt("id_atendente"));
-                condicional.setData(resultado.getDate("data_hora").toLocalDate());
-                condicional.setValor(resultado.getDouble("valor"));
-                condicional.setQtd(resultado.getInt("qtd"));
-                condicional.setAtivo(resultado.getBoolean("ativo"));
-
-                // Obtendo os dados completos do Cliente associado à Condicional
-                ClienteDAO clienteDAO = new ClienteDAO();
-                clienteDAO.setConnection(connection);
-                cliente = clienteDAO.buscar(cliente);
-
-                // Obtendo Atendente
-                AtendenteDAO atendenteDAO = new AtendenteDAO();
-                atendenteDAO.setConnection(connection);
-                atendente = atendenteDAO.buscar(atendente);
-
-                // Obtendo os dados completos dos Itens de Condicional associados à Condicional
-                ItensCondicionalDAO itensCondicionalDAO = new ItensCondicionalDAO();
-                itensCondicionalDAO.setConnection(connection);
-                itensCondicional = itensCondicionalDAO.listarPorCondicional(condicional);
-
-                condicional.setCliente(cliente);
-                condicional.setAtendente(atendente);
-                condicional.setItensCondicional(itensCondicional);
-                retorno.add(condicional);
+                retorno.add(getCondicional(resultado));
             }
         } catch (SQLException ex) {
             Logger.getLogger(CondicionalDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -279,5 +215,57 @@ public class CondicionalDAO {
             Logger.getLogger(CondicionalDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return retorno;
+    }
+
+    public List<Condicional> listarPorCliente(Cliente cliente) {
+        String sql = SQLs.SELECT_ALL(Condicional.class.getSimpleName().toUpperCase()).replace(";",
+                " AND id_cliente = ?;");
+        List<Condicional> retorno = new ArrayList<>();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, cliente.getId());
+            ResultSet resultado = stmt.executeQuery();
+            while (resultado.next()) {
+                retorno.add(getCondicional(resultado));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CondicionalDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return retorno;
+    }
+
+    private Condicional getCondicional(ResultSet resultado) throws SQLException {
+        Condicional condicional = new Condicional();
+        Atendente atendente = new Atendente();
+        Cliente cliente = new Cliente();
+        List<ItensCondicional> itensCondicional = new ArrayList<>();
+
+        condicional.setId(resultado.getInt("id_condicional"));
+        cliente.setId(resultado.getInt("id_cliente"));
+        atendente.setId(resultado.getInt("id_atendente"));
+        condicional.setData(resultado.getDate("data_hora").toLocalDate());
+        condicional.setValor(resultado.getDouble("valor"));
+        condicional.setQtd(resultado.getInt("qtd"));
+        condicional.setAtivo(resultado.getBoolean("ativo"));
+
+        // Obtendo os dados completos do Cliente associado à Condicional
+        ClienteDAO clienteDAO = new ClienteDAO();
+        clienteDAO.setConnection(connection);
+        cliente = clienteDAO.buscar(cliente);
+
+        // Obtendo Atendente
+        AtendenteDAO atendenteDAO = new AtendenteDAO();
+        atendenteDAO.setConnection(connection);
+        atendente = atendenteDAO.buscar(atendente);
+
+        // Obtendo os dados completos dos Itens de Condicional associados à Condicional
+        ItensCondicionalDAO itensCondicionalDAO = new ItensCondicionalDAO();
+        itensCondicionalDAO.setConnection(connection);
+        itensCondicional = itensCondicionalDAO.listarPorCondicional(condicional);
+
+        condicional.setCliente(cliente);
+        condicional.setAtendente(atendente);
+        condicional.setItensCondicional(itensCondicional);
+        return condicional;
     }
 }

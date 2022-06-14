@@ -174,34 +174,33 @@ public class ListaRoupaController {
         }
     }
 
-    private void addMsgErro(TextField t) {
-        msgErro = msgErro.concat(t.getId() + " inválida\n");
+    private void addMsgErro(TextField t, String msg) {
+        msgErro = msgErro.concat(t.getId() + " inválido: " + msg + "\n");
     }
 
     private boolean validation() {
         msgErro = "";
         if (nome.getText().length() < 3)
-            addMsgErro(nome);
-        if (qtd.getText().length() < 1) {
-            addMsgErro(qtd);
-        } else {
-            try {
-                if (Integer.parseInt(qtd.getText()) <= 0)
-                    addMsgErro(qtd);
-            } catch (NumberFormatException e) {
-                addMsgErro(qtd);
+            addMsgErro(nome, "Nome deve ter mais de 3 caracteres");
+        try {
+            if (roupa == null) {
+                if (Integer.parseInt(qtd.getText()) < 1)
+                    addMsgErro(qtd, "Quantidade deve ser maior que 0");
+            } else {
+                if (Integer.parseInt(qtd.getText()) < roupa.getQtd_em_condicional())
+                    addMsgErro(qtd, "Quantidade deve ser maior que " + roupa.getQtd_em_condicional());
             }
+        } catch (NumberFormatException e) {
+            addMsgErro(qtd, "Quantidade deve ser um número");
         }
-        if (valor.getText().length() < 1) {
-            addMsgErro(this.valor);
-        } else {
-            try {
-                if (Double.parseDouble(valor.getText()) <= 0)
-                    addMsgErro(this.valor);
-            } catch (NumberFormatException e) {
-                addMsgErro(valor);
-            }
+
+        try {
+            if (Double.parseDouble(valor.getText()) <= 0 || valor.getText().length() < 1)
+                addMsgErro(this.valor, "Valor deve ser maior que 0");
+        } catch (NumberFormatException e) {
+            addMsgErro(valor, "Valor deve ser um número");
         }
+
         if (!msgErro.isBlank()) {
             Alert alert = new Alert(AlertType.ERROR, msgErro);
             alert.showAndWait();

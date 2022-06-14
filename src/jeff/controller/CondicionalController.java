@@ -182,26 +182,30 @@ public class CondicionalController {
 
     private void actionsTelaCondicional() {
         cbCliente.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            Cliente cliente = new Cliente();
-            try {
-                cliente.setKey(newValue);
-                cliente = clienteDAO.buscar(cliente);
-                if (cliente != null)
-                    this.condicional.setCliente(cliente);
-            } catch (Exception e) {
-                cbCliente.getEditor().setText("");
-            } finally {
-                cliente = this.condicional.getCliente();
-                if (cliente == null) {
-                    cbCliente.getSelectionModel().clearSelection();
-                } else {
-                    cbCliente.getSelectionModel().select((cliente.getKey()));
+            if (newValue != null && !cbCliente.getSelectionModel().getSelectedItem().equals(oldValue)) {
+                Cliente cliente = new Cliente();
+                try {
+                    cliente.setKey(newValue);
+                    cliente = clienteDAO.buscar(cliente);
+                    if (cliente != null)
+                        this.condicional.setCliente(cliente);
+                } catch (Exception e) {
+                    cbCliente.getEditor().setText("");
+                } finally {
+                    cliente = this.condicional.getCliente();
+                    if (cliente == null) {
+                        cbCliente.getSelectionModel().clearSelection();
+                    } else {
+                        cbCliente.getSelectionModel().select((cliente.getKey()));
+                    }
+                    telaCondicional_UPDATE_valorDisponivel();
                 }
-                telaCondicional_UPDATE_valorDisponivel();
             }
         });
 
-        cbAtendente.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        cbAtendente.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
+
+        {
             if (newValue != null && !cbAtendente.getSelectionModel().getSelectedItem().equals(oldValue)) {
                 try {
                     Atendente atendente = new Atendente();
@@ -230,18 +234,18 @@ public class CondicionalController {
             double valorDessaCondicional = this.condicional.getValorDouble();
             double valorDebitosAtivos = condicionalDAO.getSomaValorTotalPorCliente(this.condicional.getCliente());
             double valorDessaCondi_no_DB = 0.0;
-            System.out.println("\n\nLimite desse Cliente: \t\t" + Util.toStringDinheiro(limiteCliente));
-            System.out.println("Valor dos debitos ativos: \t" + Util.toStringDinheiro(valorDebitosAtivos));
-            System.out.println("Valor dessa Condi.: \t\t" + Util.toStringDinheiro(valorDessaCondicional));
+            // System.out.println("\n\nLimite desse Cliente: \t\t" + Util.toStringDinheiro(limiteCliente));
+            // System.out.println("Valor dos debitos ativos: \t" + Util.toStringDinheiro(valorDebitosAtivos));
+            // System.out.println("Valor dessa Condi.: \t\t" + Util.toStringDinheiro(valorDessaCondicional));
 
             valorDisponivel = limiteCliente - valorDebitosAtivos;
             if (this.condicional.getId() != 0) {
                 valorDessaCondi_no_DB = condicionalDAO.buscar(condicional).getValorDouble();
-                System.out.println("Valor disponivel old: \t\t" + Util.toStringDinheiro(valorDisponivel));
+                // System.out.println("Valor disponivel old: \t\t" + Util.toStringDinheiro(valorDisponivel));
                 valorDisponivel += valorDessaCondi_no_DB;
             }
             valorDisponivel -= valorDessaCondicional;
-            System.out.println("Valor disponivel new: \t\t" + Util.toStringDinheiro(valorDisponivel));
+            // System.out.println("Valor disponivel new: \t\t" + Util.toStringDinheiro(valorDisponivel));
             lbCLienteValorMaxDisponivel.setText(Util.toStringDinheiro(valorDisponivel));
 
             if (valorDisponivel <= 0.0)

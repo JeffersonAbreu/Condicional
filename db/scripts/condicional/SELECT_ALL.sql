@@ -7,4 +7,6 @@ SELECT
   qtd,
   ativo
 FROM
-  CONDICIONAL;
+  CONDICIONAL
+WHERE
+  ativo = 1;

@@ -19,9 +19,18 @@
                      <children>
                         <AnchorPane style="-fx-background-color: #ffffff;">
                            <children>
-                              <HBox alignment="BOTTOM_LEFT" layoutY="9.0" spacing="5.0">
+                              <HBox layoutY="1.0" nodeOrientation="LEFT_TO_RIGHT" spacing="5.0">
                                  <children>
-                                    <JFXComboBox fx:id="cbFiltro" focusColor="#405aa800" prefHeight="25.0" prefWidth="250.0" viewOrder="10.0" />
+                                    <JFXComboBox fx:id="cbFiltro" focusColor="#405aa800" prefHeight="25.0" prefWidth="275.0" promptText="Selecione uma Opção..." unFocusColor="#c02db4" viewOrder="10.0">
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" left="3.0" />
+                                       </HBox.margin>
+                                    </JFXComboBox>
+                                    <JFXComboBox fx:id="cbCliente" focusColor="#405aa800" prefHeight="25.0" prefWidth="275.0" promptText="Selecione um Cliente..." unFocusColor="#c02db4" viewOrder="10.0" visible="false">
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" left="3.0" />
+                                       </HBox.margin>
+                                    </JFXComboBox>
                                  </children>
                               </HBox>
                            </children>
@@ -40,10 +49,13 @@
                      <padding>
                         <Insets left="5.0" />
                      </padding>
+                     <VBox.margin>
+                        <Insets left="2.0" right="5.0" />
+                     </VBox.margin>
                   </VBox>
                   <HBox alignment="CENTER_RIGHT">
                      <children>
-                        <Button fx:id="btImprimir" alignment="CENTER" mnemonicParsing="false" onAction="#actionImprimir" prefHeight="7.0" prefWidth="134.0" styleClass="nav" stylesheets="@css/style.css" text="Imprimir">
+                        <Button fx:id="btImprimir" alignment="CENTER" disable="true" mnemonicParsing="false" onAction="#actionImprimir" prefHeight="7.0" prefWidth="134.0" styleClass="nav" stylesheets="@css/style.css" text="Imprimir">
                            <font>
                               <Font name="Courier New Bold" size="14.0" />
                            </font>

@@ -2,7 +2,10 @@ package jeff.controller;
 
 import java.net.URL;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXComboBox;
@@ -17,13 +20,19 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import jeff.model.dao.ClienteDAO;
 import jeff.model.dao.CondicionalDAO;
 import jeff.model.database.Database;
 import jeff.model.database.DatabaseFactory;
+import jeff.model.domain.Cliente;
 import jeff.model.domain.Condicional;
-import tray.notification.NotificationType;
-import tray.notification.TrayNotification;
+import jeff.util.UtilAutoCompleteComboBox;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class RelatorioController {
     @FXML
@@ -33,7 +42,7 @@ public class RelatorioController {
     @FXML
     private Button btImprimir;
     @FXML
-    private JFXComboBox<String> cbFiltro;
+    private JFXComboBox<String> cbFiltro, cbCliente;
     @FXML
     private TableView<Condicional> tabCondicional;
     @FXML
@@ -50,11 +59,15 @@ public class RelatorioController {
     private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
     private final Connection connection = database.conectar();
     private final CondicionalDAO condicionalDAO = new CondicionalDAO();
-    private final List<String> opcoes = List.of("Selecione uma opção...", "Opção 1", "Opção 2");
+    private final ClienteDAO clienteDAO = new ClienteDAO();
+    private final List<String> opcoes = List.of("Selecione uma opção...", "Relatório de Condicionais Ativas",
+            "Relatório de Condicionais Ativas : por Cliente");
+    private Cliente cliente = new Cliente();
 
     @FXML
     void initialize() {
         condicionalDAO.setConnection(connection);
+        clienteDAO.setConnection(connection);
         colIDCond.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCliente.setCellValueFactory(new PropertyValueFactory<>("nomeCliente"));
         colAtendente.setCellValueFactory(new PropertyValueFactory<>("nomeAtendente"));
@@ -70,14 +83,15 @@ public class RelatorioController {
         tabCondicional.setItems(obsListaCondicional);
         cbFiltro.setItems(FXCollections.observableArrayList(opcoes));
         cbFiltro.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            cbCliente.setVisible(false);
             switch (newValue.intValue()) {
                 case 1:
                     obsListaCondicional.setAll(condicionalDAO.listar());
                     break;
                 case 2:
-                    int id = 1;
-
-                    // obsListaCondicional.setAll(condicionalDAO.listarPorIdCliente(id));
+                    obsListaCondicional.clear();
+                    cbCliente.setVisible(true);
+                    carregaComboBoxCliente();
                     break;
                 default:
                     obsListaCondicional.clear();
@@ -91,11 +105,77 @@ public class RelatorioController {
             }
         });
         cbFiltro.getSelectionModel().select(0);
+
+        cbCliente.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (newValue != null && !cbCliente.getSelectionModel().getSelectedItem().equals(oldValue)) {
+                    cliente = new Cliente();
+                    cliente.setKey(newValue);
+                    obsListaCondicional.setAll(condicionalDAO.listarPorCliente(cliente));
+                }
+            } catch (Exception e) {
+                cbCliente.getEditor().setText("");
+                cliente = null;
+            } finally {
+                if (cliente == null)
+                    cbCliente.getSelectionModel().clearSelection();
+            }
+            if (obsListaCondicional.isEmpty()) {
+                tabCondicional.setPlaceholder(new Label("Nenhum registro encontrado!\n\tby Jefferson Abreu"));
+                btImprimir.setDisable(true);
+            } else {
+                btImprimir.setDisable(false);
+            }
+        });
     }
 
     @FXML
     void actionImprimir(ActionEvent event) {
-        TrayNotification tray = new TrayNotification("FOI QUASE - Reletório", "A função que gera o relatório eu não consegui fazer!", NotificationType.WARNING);
-        tray.showAndDismiss(Duration.seconds(15));
+        Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
+        Connection connect = database.conectar();
+        if (cbFiltro.getSelectionModel().getSelectedIndex() == 1) {
+            URL url = getClass().getResource("/jeff/relatorios/RelatorioCondicionaisEmAberto.jasper");
+            try {
+                JasperReport jasperReport = (JasperReport) JRLoader.loadObject(url);
+                // null = caso não exista filtro
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, connect);
+
+                // false não deixar fechar a aplicação principal
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setTitle("Relatório de Condicionais em Aberto");
+                jasperViewer.setVisible(true);
+            } catch (JRException e) {
+                e.printStackTrace();
+            }
+        } else if (cbFiltro.getSelectionModel().getSelectedIndex() == 2) {
+            URL url = getClass().getResource("/jeff/relatorios/RelatorioCondicionaisEmAbertoPorCliente.jasper");
+            try {
+                Map<String, Object> parametros = new HashMap<>();
+                parametros.put("id_cliente", cliente.getId());
+                JasperReport jasperReport = (JasperReport) JRLoader.loadObject(url);
+
+                // null = caso não exista filtro
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, connect);
+
+                // false não deixar fechar a aplicação principal
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setTitle("Relatório de Condicionais em Aberto por Cliente");
+                jasperViewer.setVisible(true);
+            } catch (JRException e) {
+                e.printStackTrace();
+            }
+        }
+        database.desconectar(connect);
+    }
+
+    private void carregaComboBoxCliente() {
+        List<Cliente> listaCliente = clienteDAO.listarTodosComConticionalAtiva();
+        if (listaCliente.size() > 0) {
+            List<String> clienteList = new ArrayList<>();
+            listaCliente.forEach(cliente -> clienteList.add(cliente.getKey()));
+            cbCliente.setItems(FXCollections.observableArrayList(clienteList));
+            // Implementa o AutoComplete utilizando a classe utilAutoCompleteComboBox
+            new UtilAutoCompleteComboBox<String>(cbCliente);
+        }
     }
 }

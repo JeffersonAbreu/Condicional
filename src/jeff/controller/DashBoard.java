@@ -42,8 +42,9 @@ public class DashBoard {
     @FXML
     void initialize() {
         condicionalDAO.setConnection(connection);
-        LocalDate inicio = LocalDate.of(1999, 01, 01);
-        LocalDate fim = LocalDate.now();
+        List<Condicional> listaCondicional = condicionalDAO.listar();
+        LocalDate inicio = listaCondicional.get(0).getData();
+        LocalDate fim = listaCondicional.get(listaCondicional.size() - 1).getData();
         dpInicio.setValue(inicio);
         dpFinal.setValue(fim);
         graficoPizza.setData(dadosPieChart);
