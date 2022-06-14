@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -35,7 +34,7 @@ public class DashBoard {
 
     // DATABASE
     private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
-    private final Connection connection = database.conectar();
+    private Connection connection = database.conectar();
     private final CondicionalDAO condicionalDAO = new CondicionalDAO();
     private ObservableList<PieChart.Data> dadosPieChart = FXCollections.observableArrayList();
 
@@ -43,6 +42,7 @@ public class DashBoard {
     void initialize() {
         condicionalDAO.setConnection(connection);
         List<Condicional> listaCondicional = condicionalDAO.listar();
+        database.desconectar(connection);
         LocalDate inicio = listaCondicional.get(0).getData();
         LocalDate fim = listaCondicional.get(listaCondicional.size() - 1).getData();
         dpInicio.setValue(inicio);
@@ -58,7 +58,10 @@ public class DashBoard {
         dadosPieChart.clear();
         LocalDate inicio = dpInicio.getValue();
         LocalDate fim = dpFinal.getValue();
+        connection = database.conectar();
+        condicionalDAO.setConnection(connection);
         ArrayList<ArrayList<String>> dados = condicionalDAO.listarTotalCondicionaisClientePorData(inicio, fim);
+        database.desconectar(connection);
         if (!dados.isEmpty()) {
             for (ArrayList<String> dado : dados) {
                 String legenda = dado.get(0) + " - " + dado.get(1) + "  "

@@ -19,7 +19,7 @@ public class Util {
     }
 
     public static String parseString(LocalDate date) {
-        return date.format(formatter).toString();
+        return date.format(formatter);
     }
 
     public static String toStringDinheiro(Double valor) {

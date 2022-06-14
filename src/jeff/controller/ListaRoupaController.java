@@ -24,6 +24,9 @@ import jeff.model.database.Database;
 import jeff.model.database.DatabaseFactory;
 import jeff.model.domain.Roupa;
 import jeff.util.Util;
+import tray.animations.AnimationType;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 public class ListaRoupaController {
     @FXML
@@ -134,8 +137,18 @@ public class ListaRoupaController {
     @FXML
     private void buttonRemover() {
         Roupa roupa = tbRoupa.getSelectionModel().getSelectedItem();
-        roupaDAO.remover(roupa);
-        carregarTableViewCliente();
+        if (roupa.getQtd_em_condicional() > 0) {
+            TrayNotification tray = new TrayNotification();
+            tray.setTitle("Não pode ser removido!");
+            tray.setMessage("A roupa Nº " + roupa.getId() + " está sendo usada em uma condicional!");
+            tray.setAnimationType(AnimationType.POPUP);
+            tray.setNotificationType(NotificationType.WARNING);
+            tray.showAndDismiss(Duration.seconds(10));
+            return;
+        } else {
+            roupaDAO.remover(roupa);
+            carregarTableViewCliente();
+        }
     }
 
     private void roupaDialog(Roupa roupa) {

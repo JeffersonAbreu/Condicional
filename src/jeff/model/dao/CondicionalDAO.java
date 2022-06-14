@@ -87,7 +87,7 @@ public class CondicionalDAO {
             sql = SQLs.SELECT_ALL(Condicional.class.getSimpleName().toUpperCase());
             stmt = connection.prepareStatement(sql);
             if (nome != null && !nome.isEmpty() && !nome.trim().isEmpty()) {
-                sql = sql.replace(";", " WHERE id_cliente IN (SELECT id_cliente FROM CLIENTE WHERE nome LIKE '");
+                sql = sql.replace(";", " AND id_cliente IN (SELECT id_cliente FROM CLIENTE WHERE nome LIKE '");
                 if (nome.startsWith(" ")) {
                     nome = nome.substring(1);
                     sql += nome + "%');";

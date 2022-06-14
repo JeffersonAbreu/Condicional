@@ -57,7 +57,7 @@ public class RelatorioController {
     ObservableList<Condicional> obsListaCondicional;
     // DATABASE
     private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
-    private final Connection connection = database.conectar();
+    private Connection connection = database.conectar();
     private final CondicionalDAO condicionalDAO = new CondicionalDAO();
     private final ClienteDAO clienteDAO = new ClienteDAO();
     private final List<String> opcoes = List.of("Selecione uma opção...", "Relatório de Condicionais Ativas",
@@ -66,8 +66,6 @@ public class RelatorioController {
 
     @FXML
     void initialize() {
-        condicionalDAO.setConnection(connection);
-        clienteDAO.setConnection(connection);
         colIDCond.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCliente.setCellValueFactory(new PropertyValueFactory<>("nomeCliente"));
         colAtendente.setCellValueFactory(new PropertyValueFactory<>("nomeAtendente"));
@@ -86,7 +84,10 @@ public class RelatorioController {
             cbCliente.setVisible(false);
             switch (newValue.intValue()) {
                 case 1:
+                    connection = database.conectar();
+                    condicionalDAO.setConnection(connection);
                     obsListaCondicional.setAll(condicionalDAO.listar());
+                    database.desconectar(connection);
                     break;
                 case 2:
                     obsListaCondicional.clear();
@@ -98,7 +99,7 @@ public class RelatorioController {
                     break;
             }
             if (obsListaCondicional.isEmpty()) {
-                tabCondicional.setPlaceholder(new Label("Nenhum registro encontrado!\n\tby Jefferson Abreu"));
+                tabCondicional.setPlaceholder(new Label("Nenhum registro encontrado!\n\t\nby Jefferson Abreu"));
                 btImprimir.setDisable(true);
             } else {
                 btImprimir.setDisable(false);
@@ -111,7 +112,10 @@ public class RelatorioController {
                 if (newValue != null && !cbCliente.getSelectionModel().getSelectedItem().equals(oldValue)) {
                     cliente = new Cliente();
                     cliente.setKey(newValue);
+                    connection = database.conectar();
+                    condicionalDAO.setConnection(connection);
                     obsListaCondicional.setAll(condicionalDAO.listarPorCliente(cliente));
+                    database.desconectar(connection);
                 }
             } catch (Exception e) {
                 cbCliente.getEditor().setText("");
@@ -121,7 +125,7 @@ public class RelatorioController {
                     cbCliente.getSelectionModel().clearSelection();
             }
             if (obsListaCondicional.isEmpty()) {
-                tabCondicional.setPlaceholder(new Label("Nenhum registro encontrado!\n\tby Jefferson Abreu"));
+                tabCondicional.setPlaceholder(new Label("Nenhum registro encontrado!\n\t\nby Jefferson Abreu"));
                 btImprimir.setDisable(true);
             } else {
                 btImprimir.setDisable(false);
@@ -131,14 +135,14 @@ public class RelatorioController {
 
     @FXML
     void actionImprimir(ActionEvent event) {
-        Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
-        Connection connect = database.conectar();
         if (cbFiltro.getSelectionModel().getSelectedIndex() == 1) {
             URL url = getClass().getResource("/jeff/relatorios/RelatorioCondicionaisEmAberto.jasper");
             try {
                 JasperReport jasperReport = (JasperReport) JRLoader.loadObject(url);
+                connection = database.conectar();
                 // null = caso não exista filtro
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, connect);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, null, connection);
+                database.desconectar(connection);
 
                 // false não deixar fechar a aplicação principal
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -154,8 +158,10 @@ public class RelatorioController {
                 parametros.put("id_cliente", cliente.getId());
                 JasperReport jasperReport = (JasperReport) JRLoader.loadObject(url);
 
+                connection = database.conectar();
                 // null = caso não exista filtro
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, connect);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, connection);
+                database.desconectar(connection);
 
                 // false não deixar fechar a aplicação principal
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -165,11 +171,13 @@ public class RelatorioController {
                 e.printStackTrace();
             }
         }
-        database.desconectar(connect);
     }
 
     private void carregaComboBoxCliente() {
+        connection = database.conectar();
+        clienteDAO.setConnection(connection);
         List<Cliente> listaCliente = clienteDAO.listarTodosComConticionalAtiva();
+        database.desconectar(connection);
         if (listaCliente.size() > 0) {
             List<String> clienteList = new ArrayList<>();
             listaCliente.forEach(cliente -> clienteList.add(cliente.getKey()));

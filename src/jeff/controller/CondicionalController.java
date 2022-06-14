@@ -234,18 +234,23 @@ public class CondicionalController {
             double valorDessaCondicional = this.condicional.getValorDouble();
             double valorDebitosAtivos = condicionalDAO.getSomaValorTotalPorCliente(this.condicional.getCliente());
             double valorDessaCondi_no_DB = 0.0;
-            // System.out.println("\n\nLimite desse Cliente: \t\t" + Util.toStringDinheiro(limiteCliente));
-            // System.out.println("Valor dos debitos ativos: \t" + Util.toStringDinheiro(valorDebitosAtivos));
-            // System.out.println("Valor dessa Condi.: \t\t" + Util.toStringDinheiro(valorDessaCondicional));
+            // System.out.println("\n\nLimite desse Cliente: \t\t" +
+            // Util.toStringDinheiro(limiteCliente));
+            // System.out.println("Valor dos debitos ativos: \t" +
+            // Util.toStringDinheiro(valorDebitosAtivos));
+            // System.out.println("Valor dessa Condi.: \t\t" +
+            // Util.toStringDinheiro(valorDessaCondicional));
 
             valorDisponivel = limiteCliente - valorDebitosAtivos;
             if (this.condicional.getId() != 0) {
                 valorDessaCondi_no_DB = condicionalDAO.buscar(condicional).getValorDouble();
-                // System.out.println("Valor disponivel old: \t\t" + Util.toStringDinheiro(valorDisponivel));
+                // System.out.println("Valor disponivel old: \t\t" +
+                // Util.toStringDinheiro(valorDisponivel));
                 valorDisponivel += valorDessaCondi_no_DB;
             }
             valorDisponivel -= valorDessaCondicional;
-            // System.out.println("Valor disponivel new: \t\t" + Util.toStringDinheiro(valorDisponivel));
+            // System.out.println("Valor disponivel new: \t\t" +
+            // Util.toStringDinheiro(valorDisponivel));
             lbCLienteValorMaxDisponivel.setText(Util.toStringDinheiro(valorDisponivel));
 
             if (valorDisponivel <= 0.0)
@@ -272,7 +277,7 @@ public class CondicionalController {
                 condicionalDAO.setConnection(connection);
                 itensCondicionalDAO.setConnection(connection);
                 roupaDAO.setConnection(connection);
-
+                boolean isNew = this.condicional.getId() == 0 ? true : false;
                 // Novo registro
                 if (condicional.getId() == 0) {
                     condicionalDAO.inserir(condicional);
@@ -300,10 +305,10 @@ public class CondicionalController {
                     itensCondicionalDAO.inserir(item);
                 }
                 connection.commit();
+                String msg = isNew ? "Cadastrada com sucesso!" : "Alterada com sucesso!";
                 TrayNotification tray = new TrayNotification();
-                tray.setRectangleFill(Paint.valueOf("#8846a2"));
-                tray.setTitle("Salvo com Sucesso!");
-                tray.setMessage("A condicional Nº " + this.condicional.getId() + " foi salva!");
+                tray.setTitle(msg);
+                tray.setMessage("A condicional Nº " + this.condicional.getId() + " "+msg);
                 tray.setAnimationType(AnimationType.POPUP);
                 tray.setNotificationType(NotificationType.SUCCESS);
                 tray.showAndDismiss(Duration.seconds(10));
@@ -314,6 +319,7 @@ public class CondicionalController {
                             NotificationType.ERROR);
                     tray.setAnimationType(AnimationType.POPUP);
                     tray.showAndDismiss(Duration.seconds(10));
+                    System.out.println(e.getMessage());
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
