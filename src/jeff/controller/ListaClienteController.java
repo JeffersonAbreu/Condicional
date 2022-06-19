@@ -82,7 +82,7 @@ public class ListaClienteController {
     private ClienteDAO clienteDAO;
 
     // DATABASE
-    private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
+    private final Database database = DatabaseFactory.getDatabase();
     private final Connection connection = database.conectar();
 
     @FXML

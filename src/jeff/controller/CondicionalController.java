@@ -3,7 +3,6 @@ package jeff.controller;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -110,7 +108,7 @@ public class CondicionalController {
     Map<Integer, Roupa> mapRoupasLixo = new TreeMap<Integer, Roupa>();
 
     // DATABASE
-    private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
+    private final Database database = DatabaseFactory.getDatabase();
     private final Connection connection = database.conectar();
     private final CondicionalDAO condicionalDAO = new CondicionalDAO();
     private final ItensCondicionalDAO itensCondicionalDAO = new ItensCondicionalDAO();

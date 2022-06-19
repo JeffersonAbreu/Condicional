@@ -3,6 +3,7 @@ package jeff.controller;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,11 +57,11 @@ public class RelatorioController {
     // minhas instancias
     ObservableList<Condicional> obsListaCondicional;
     // DATABASE
-    private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
+    private final Database database = DatabaseFactory.getDatabase();
     private Connection connection = database.conectar();
     private final CondicionalDAO condicionalDAO = new CondicionalDAO();
     private final ClienteDAO clienteDAO = new ClienteDAO();
-    private final List<String> opcoes = List.of("Selecione uma opção...", "Relatório de Condicionais Ativas",
+    private final List<String> opcoes = Arrays.asList("Selecione uma opção...", "Relatório de Condicionais Ativas",
             "Relatório de Condicionais Ativas : por Cliente");
     private Cliente cliente = new Cliente();
 
@@ -136,7 +137,7 @@ public class RelatorioController {
     @FXML
     void actionImprimir(ActionEvent event) {
         if (cbFiltro.getSelectionModel().getSelectedIndex() == 1) {
-            URL url = getClass().getResource("/jeff/relatorios/RelatorioCondicionaisEmAberto.jasper");
+            URL url = getClass().getResource("/jeff/relatorios/".concat(DatabaseFactory.SGBD).concat("/RelatorioCondicionaisEmAberto.jasper"));
             try {
                 JasperReport jasperReport = (JasperReport) JRLoader.loadObject(url);
                 connection = database.conectar();
@@ -152,7 +153,7 @@ public class RelatorioController {
                 e.printStackTrace();
             }
         } else if (cbFiltro.getSelectionModel().getSelectedIndex() == 2) {
-            URL url = getClass().getResource("/jeff/relatorios/RelatorioCondicionaisEmAbertoPorCliente.jasper");
+            URL url = getClass().getResource("/jeff/relatorios/".concat(DatabaseFactory.SGBD).concat("/RelatorioCondicionaisEmAbertoPorCliente.jasper"));
             try {
                 Map<String, Object> parametros = new HashMap<>();
                 parametros.put("id_cliente", cliente.getId());

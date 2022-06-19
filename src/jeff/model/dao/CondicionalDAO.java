@@ -38,7 +38,7 @@ public class CondicionalDAO {
             stmt.setDate(3, Date.valueOf(condicional.getData()));
             stmt.setDouble(4, condicional.getValorDouble());
             stmt.setInt(5, condicional.getQtd());
-            stmt.setBoolean(6, condicional.isAtivo());
+            stmt.setInt(6, condicional.isAtivo() == true ? 1 : 0);
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -56,7 +56,7 @@ public class CondicionalDAO {
             stmt.setDate(3, Date.valueOf(condicional.getData()));
             stmt.setDouble(4, condicional.getValorDouble());
             stmt.setInt(5, condicional.getQtd());
-            stmt.setBoolean(6, condicional.isAtivo());
+            stmt.setInt(6, condicional.isAtivo() == true ? 1 : 0);
             stmt.setInt(7, condicional.getId());
             stmt.execute();
             return true;
@@ -138,7 +138,7 @@ public class CondicionalDAO {
                 condicional.setData(resultado.getDate("data_hora").toLocalDate());
                 condicional.setValor(resultado.getDouble("valor"));
                 condicional.setQtd(resultado.getInt("qtd"));
-                condicional.setAtivo(resultado.getBoolean("ativo"));
+                condicional.setAtivo(resultado.getInt("ativo") == 1 ? true : false);
 
                 // Obtendo os dados completos do Cliente associado à Condicional
                 ClienteDAO clienteDAO = new ClienteDAO();
@@ -191,7 +191,7 @@ public class CondicionalDAO {
     }
 
     public ArrayList<ArrayList<String>> listarTotalCondicionaisClientePorData(LocalDate inicio, LocalDate fim) {
-        String sql = "SELECT c.id_cliente, nome, SUM(valor) AS total FROM cliente c INNER JOIN condicional con ON con.id_cliente= c.id_cliente GROUP BY c.id_cliente HAVING data_hora BETWEEN ? AND ? ORDER BY total";
+        String sql = "SELECT c.id_cliente, nome, SUM(valor) AS total FROM cliente c INNER JOIN condicional con ON con.id_cliente= c.id_cliente WHERE con.data_hora BETWEEN ? AND ? GROUP BY c.id_cliente ORDER BY total";
         ArrayList<ArrayList<String>> retorno = new ArrayList<ArrayList<String>>();
 
         try {
@@ -246,7 +246,7 @@ public class CondicionalDAO {
         condicional.setData(resultado.getDate("data_hora").toLocalDate());
         condicional.setValor(resultado.getDouble("valor"));
         condicional.setQtd(resultado.getInt("qtd"));
-        condicional.setAtivo(resultado.getBoolean("ativo"));
+        condicional.setAtivo(resultado.getInt("ativo") == 1 ? true : false);
 
         // Obtendo os dados completos do Cliente associado à Condicional
         ClienteDAO clienteDAO = new ClienteDAO();

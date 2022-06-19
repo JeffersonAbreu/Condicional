@@ -33,7 +33,7 @@ public class DashBoard {
     private PieChart graficoPizza;
 
     // DATABASE
-    private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
+    private final Database database = DatabaseFactory.getDatabase();
     private Connection connection = database.conectar();
     private final CondicionalDAO condicionalDAO = new CondicionalDAO();
     private ObservableList<PieChart.Data> dadosPieChart = FXCollections.observableArrayList();

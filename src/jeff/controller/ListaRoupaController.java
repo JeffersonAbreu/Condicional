@@ -85,7 +85,7 @@ public class ListaRoupaController {
     private ObservableList<Roupa> observableListRoupas;
     private String msgErro = "";
     // DATABASE
-    private final Database database = DatabaseFactory.getDatabase(DatabaseFactory.SQLite);
+    private final Database database = DatabaseFactory.getDatabase();
     private final Connection connection = database.conectar();
     private final RoupaDAO roupaDAO = new RoupaDAO();
     private Roupa roupa;
@@ -214,7 +214,7 @@ public class ListaRoupaController {
             addMsgErro(valor, "Valor deve ser um número");
         }
 
-        if (!msgErro.isBlank()) {
+        if (!msgErro.isEmpty()) {
             Alert alert = new Alert(AlertType.ERROR, msgErro);
             alert.showAndWait();
             return false;

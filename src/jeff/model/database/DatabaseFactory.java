@@ -1,9 +1,9 @@
 package jeff.model.database;
 
 public class DatabaseFactory {
-    public static final String PostgreSQL = "postgresql", MySQL = "mysql", SQLite = "sqlite";
-
-    public static Database getDatabase(String nome) {
+    private static final String PostgreSQL = "postgresql", MySQL = "mysql", SQLite = "sqlite";
+    public static final String SGBD = DatabaseFactory.PostgreSQL;
+    private static Database getDatabase(String nome) {
         if (nome.equals("postgresql")) {
             return new DatabasePostgreSQL();
         } else if (nome.equals("mysql")) {
@@ -12,5 +12,9 @@ public class DatabaseFactory {
             return new DatabaseSQLite();
         }
         return null;
+    }
+
+    public static Database getDatabase() {
+        return DatabaseFactory.getDatabase(DatabaseFactory.SGBD);
     }
 }

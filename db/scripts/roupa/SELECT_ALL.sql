@@ -3,4 +3,5 @@ SELECT id_roupa,
        valor,
        qtd,
        qtd_em_condicional
-  FROM ROUPA;
+  FROM ROUPA
+  ORDER BY id_roupa;
