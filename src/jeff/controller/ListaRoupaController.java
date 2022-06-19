@@ -175,7 +175,7 @@ public class ListaRoupaController {
                 roupa = new Roupa();
             }
             roupa.setNome(nome.getText());
-            roupa.setValor(Util.converterStringParaDouble(valor.getText()));
+            roupa.setValor(Util.toDouble(valor.getText()));
             roupa.setQtd(Integer.parseInt(qtd.getText()));
             if (novo)
                 roupaDAO.inserir(roupa);
@@ -211,7 +211,7 @@ public class ListaRoupaController {
             if (Double.parseDouble(valor.getText()) <= 0 || valor.getText().length() < 1)
                 addMsgErro(this.valor, "Valor deve ser maior que 0");
         } catch (NumberFormatException e) {
-            addMsgErro(valor, "Valor deve ser um número");
+            addMsgErro(valor, "Valor deve ser um número, sem vírgula ou ponto na milhar");
         }
 
         if (!msgErro.isEmpty()) {
