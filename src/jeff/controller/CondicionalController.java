@@ -317,7 +317,6 @@ public class CondicionalController {
                             NotificationType.ERROR);
                     tray.setAnimationType(AnimationType.POPUP);
                     tray.showAndDismiss(Duration.seconds(10));
-                    System.out.println(e.getMessage());
                 } catch (SQLException e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
