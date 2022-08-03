@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Servidor",
+            "request": "launch",
+            "mainClass": "jeff.Servidor",
+            "projectName": "Condicional_93d1ac"
+        },
+        {
+            "type": "java",
             "name": "Launch App",
             "request": "launch",
             "mainClass": "App",

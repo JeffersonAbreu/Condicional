@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="448" prefWidth="590" styleClass="navbar" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jeff.controller.ThreadsSocketsController">
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-radius: 20px; -fx-background-color: white;" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" right="7.0" />
+         </BorderPane.margin>
+         <children>
+            <VBox alignment="CENTER" layoutX="242.0" layoutY="115.0" spacing="20.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label text="Nº de clientes conectados">
+                     <font>
+                        <Font size="33.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbQtdClientesConectados" alignment="CENTER" prefHeight="124.0" prefWidth="590.0" text="0" textAlignment="CENTER">
+                     <font>
+                        <Font name="SansSerif Regular" size="42.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

@@ -87,6 +87,21 @@
                   </ImageView>
                </graphic>
             </Button>
+            <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#actionThreadsSockets" prefHeight="40.0" prefWidth="120.0" styleClass="nav" text="Threads e Sockets" VBox.vgrow="NEVER">
+               <graphic>
+                  <ImageView fitWidth="24.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@img/description_FILL0_wght300_GRAD0_opsz40.png" />
+                     </image>
+                     <effect>
+                        <ColorAdjust brightness="1.0" contrast="-1.0" />
+                     </effect>
+                  </ImageView>
+               </graphic>
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" top="10.0" />
+               </VBox.margin>
+            </Button>
          </children>
       </VBox>
    </left>

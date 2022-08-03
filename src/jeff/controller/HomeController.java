@@ -44,6 +44,10 @@ public class HomeController {
     void actionRelatorio(MouseEvent event) {
         loadUI("relatorio");
     }
+    @FXML
+    void actionThreadsSockets(MouseEvent event) {
+        loadUI("threadsSockets");
+    }
 
     @FXML
     void actionRoupa(MouseEvent event) {
